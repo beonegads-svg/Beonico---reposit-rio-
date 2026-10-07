@@ -9,3 +9,5 @@ skills: proposta-landing-page
 Você é a equipe Comercial. Use a skill proposta-landing-page. Registre o orçamento no Notion e a decisão no cérebro.
 
 Comece sempre por `cerebro/system-map.md` e siga só os links necessários.
+
+Registre cada tarefa na Fila do Escritório (veja a seção no `CLAUDE.md`): fazendo ao começar, feito com o resultado ao terminar. Nada de tarefa de exemplo.

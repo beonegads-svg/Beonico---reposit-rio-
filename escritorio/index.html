@@ -116,6 +116,7 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
 .empty { color: var(--muted); font-size: 13.5px; padding: 18px 4px; text-align: center; }
 .empty strong { color: var(--ink); font-weight: 600; }
 .agent { cursor: pointer; }
+.t-res { font-size: 12.5px; color: var(--ok); overflow-wrap: anywhere; }
 .brain-t { fill: #F5E7B0; font: 500 10.5px var(--f-mono); letter-spacing: .08em; }
 .agent.thinking { filter: drop-shadow(0 0 6px rgba(232,197,71,.9)); }
 .bubble-bg { fill: #F5F0E1; stroke: rgba(11,16,32,.25); }
@@ -141,7 +142,7 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
 
   <main class="grid">
     <section class="office" aria-label="Planta do escritório">
-      <svg id="map" viewBox="90 72 820 560" role="img" aria-label="Escritório isométrico com sete salas de equipe ligadas ao cérebro central"></svg>
+      <svg id="map" viewBox="90 50 820 590" role="img" aria-label="Escritório isométrico com sete salas de equipe ligadas ao cérebro central"></svg>
       <span class="hint">Clique numa sala ou num agente</span>
     </section>
 
@@ -181,30 +182,18 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
 
 <script>
 const TEAMS = [
-  { id: "diretoria",   nome: "Diretoria",   cor: "#E8C547", gx: 0, gy: 0, agentes: 1, desc: "Prioriza, cobra pendências e distribui o trabalho.", tools: ["gerente-lucas", "Notion"], work: ["revisando prioridades", "lendo a fila", "cobrando pendências"] },
-  { id: "atendimento", nome: "Atendimento", cor: "#F28FB1", gx: 1, gy: 0, agentes: 2, desc: "Onboarding, perfil, histórico e felicidade dos clientes.", tools: ["client-profile", "Notion", "Google Calendar"], work: ["atualizando fichas", "preparando reunião", "registrando interação"] },
-  { id: "conteudo",    nome: "Conteúdo",    cor: "#B48CFF", gx: 2, gy: 0, agentes: 3, desc: "Lotes do mês, pautas, roteiros e peças.", tools: ["content-planning", "client-profile", "Canva"], work: ["escrevendo roteiro", "montando pauta", "ajustando legenda"] },
-  { id: "trafego",     nome: "Tráfego",     cor: "#6FB7FF", gx: 2, gy: 1, agentes: 3, desc: "Meta Ads: relatórios, otimização, públicos. Usa o Jev para triagem.", tools: ["relatorio-meta-ads", "Meta Ads", "TypeSafe Jev"], work: ["olhando CPM", "testando público", "triando leads com o Jev"] },
-  { id: "comercial",   nome: "Comercial",   cor: "#F2A65A", gx: 2, gy: 2, agentes: 1, desc: "Propostas e orçamentos de LP e site.", tools: ["proposta-landing-page"], work: ["montando proposta", "revisando escopo"] },
-  { id: "sites",       nome: "Sites",       cor: "#5BD6A0", gx: 1, gy: 2, agentes: 2, desc: "Landing pages e sites depois da proposta aprovada.", tools: ["landing-page-build", "Canva"], work: ["ajustando layout", "testando no celular"] },
-  { id: "expansao",    nome: "Expansão",    cor: "#4DD0E1", gx: 0, gy: 2, agentes: 1, desc: "Inventário de lojas e investimento de franquia.", tools: ["inventario-loja-investimento", "Google Drive"], work: ["classificando inventário", "somando investimento"] },
+  { id: "diretoria",   nome: "Diretoria",   cor: "#E8C547", gx: 0, gy: 0, agentes: 1, desc: "Prioriza, cobra pendências e distribui o trabalho.", tools: ["gerente-lucas", "Notion"] },
+  { id: "atendimento", nome: "Atendimento", cor: "#F28FB1", gx: 1, gy: 0, agentes: 2, desc: "Onboarding, perfil, histórico e felicidade dos clientes.", tools: ["client-profile", "Notion", "Google Calendar"] },
+  { id: "conteudo",    nome: "Conteúdo",    cor: "#B48CFF", gx: 2, gy: 0, agentes: 3, desc: "Lotes do mês, pautas, roteiros e peças.", tools: ["content-planning", "client-profile", "Canva"] },
+  { id: "trafego",     nome: "Tráfego",     cor: "#6FB7FF", gx: 2, gy: 1, agentes: 3, desc: "Meta Ads: relatórios, otimização, públicos. Usa o Jev para triagem.", tools: ["relatorio-meta-ads", "Meta Ads", "TypeSafe Jev"] },
+  { id: "comercial",   nome: "Comercial",   cor: "#F2A65A", gx: 2, gy: 2, agentes: 1, desc: "Propostas e orçamentos de LP e site.", tools: ["proposta-landing-page"] },
+  { id: "sites",       nome: "Sites",       cor: "#5BD6A0", gx: 1, gy: 2, agentes: 2, desc: "Landing pages e sites depois da proposta aprovada.", tools: ["landing-page-build", "Canva"] },
+  { id: "expansao",    nome: "Expansão",    cor: "#4DD0E1", gx: 0, gy: 2, agentes: 1, desc: "Inventário de lojas e investimento de franquia.", tools: ["inventario-loja-investimento", "Google Drive"] },
 ];
 const BRAIN = { gx: 1, gy: 1 };
 const byId = Object.fromEntries(TEAMS.map(t => [t.id, t]));
 const NEXT = { fila: "fazendo", fazendo: "feito", feito: "fila" };
 const NEXT_LBL = { fila: "começar", fazendo: "concluir", feito: "reabrir" };
-const HANDOFFS = [
-  ["trafego", "conteudo", "Os criativos cansaram. Tem novos?", "Mando 3 variações."],
-  ["comercial", "sites", "Proposta aprovada! A LP é sua.", "Já abro o design."],
-  ["atendimento", "conteudo", "Cliente pediu mais Reels.", "Entra no próximo lote."],
-  ["diretoria", "trafego", "Como estão os números?", "Puxando agora."],
-  ["sites", "comercial", "LP no ar, pode avisar.", "Mando a mensagem."],
-  ["expansao", "diretoria", "Inventário classificado.", "Ótimo, registra no cérebro."],
-  ["atendimento", "diretoria", "Tem cliente em atenção.", "Prioridade hoje."],
-  ["conteudo", "atendimento", "Lote pronto pra aprovação.", "Envio pro cliente."],
-  ["trafego", "atendimento", "Relatório pronto.", "Mando ainda hoje."],
-  ["diretoria", "comercial", "Algum orçamento parado?", "Um, vou cobrar."],
-];
 const GREET = ["oi!", "e aí?", "bom dia!", "café?", "bora!", "👋"];
 
 /* ---------- Isometria ---------- */
@@ -231,45 +220,176 @@ const TOTAL = 3 * U + 2 * GAP;
 const seats = {};
 let agentLayer, bubbleLayer;
 
-function drawOffice() {
-  svg.textContent = "";
+const LOUNGE = { gx: 0, gy: 1 };
+const WALL_H = 46;
+let seed = 7;
+const srnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+
+// Faces de parede: plano y = const (parede do fundo) e plano x = const (parede esquerda)
+const faceY = (x0, x1, y, z0, z1) => pts([iso(x0, y, z0), iso(x1, y, z0), iso(x1, y, z1), iso(x0, y, z1)]);
+const faceX = (x, y0, y1, z0, z1) => pts([iso(x, y0, z0), iso(x, y1, z0), iso(x, y1, z1), iso(x, y0, z1)]);
+const floorRect = (x0, y0, x1, y1, z) => pts([iso(x0, y0, z), iso(x1, y0, z), iso(x1, y1, z), iso(x0, y1, z)]);
+
+function defsAll() {
   const defs = el("defs", {});
   const rg = el("radialGradient", { id: "brainGlow" }, defs);
   el("stop", { offset: "0", "stop-color": "#E8C547", "stop-opacity": ".55" }, rg);
   el("stop", { offset: "1", "stop-color": "#E8C547", "stop-opacity": "0" }, rg);
+  const lamp = el("radialGradient", { id: "lamp" }, defs);
+  el("stop", { offset: "0", "stop-color": "#FFE7A8", "stop-opacity": ".32" }, lamp);
+  el("stop", { offset: "1", "stop-color": "#FFE7A8", "stop-opacity": "0" }, lamp);
+  const sky = el("linearGradient", { id: "sky", x1: "0", y1: "0", x2: "0", y2: "1" }, defs);
+  el("stop", { offset: "0", "stop-color": "#0A1230" }, sky);
+  el("stop", { offset: ".7", "stop-color": "#1B2758" }, sky);
+  el("stop", { offset: "1", "stop-color": "#3A3170" }, sky);
+}
 
-  el("polygon", { points: pts([iso(-20, -20), iso(TOTAL + 20, -20), iso(TOTAL + 20, TOTAL + 20), iso(-20, TOTAL + 20)]), fill: "#10172C", stroke: "#1E2846" });
+function windowOnBack(c, x0, x1, g) {
+  const y = c.y + 4.05, z0 = 22, z1 = WALL_H + 4;
+  el("polygon", { points: faceY(x0 - 1.5, x1 + 1.5, y, z0 - 2, z1 + 1.5), fill: "#0B1020" }, g);
+  el("polygon", { points: faceY(x0, x1, y, z0, z1), fill: "url(#sky)" }, g);
+  // Silhueta de prédios
+  let x = x0;
+  while (x < x1 - 2) {
+    const w = 4 + srnd() * 6, h = 4 + srnd() * 14, xe = Math.min(x1, x + w);
+    el("polygon", { points: faceY(x, xe, y, z0, z0 + h), fill: "#121A3A" }, g);
+    for (let k = 0; k < 3; k++) if (srnd() < .5) { const lx = x + srnd() * (xe - x - 1), lz = z0 + 1 + srnd() * (h - 2); el("polygon", { points: faceY(lx, lx + 1, y, lz, lz + 1.2), fill: "#FFD27A", "fill-opacity": ".85" }, g); }
+    x = xe + .6;
+  }
+  for (let k = 0; k < 4; k++) { const sx = x0 + srnd() * (x1 - x0), sz = z1 - 2 - srnd() * 6; const p = iso(sx, y, sz); el("circle", { cx: p[0], cy: p[1], r: .7, fill: "#fff", "fill-opacity": ".8" }, g); }
+  const mid = (x0 + x1) / 2;
+  el("polygon", { points: faceY(mid - .6, mid + .6, y, z0, z1), fill: "#0B1020" }, g);
+}
 
+function poster(t, c, g) {
+  const x = c.x + 4.05, y0 = c.y + 24, y1 = c.y + 66, z0 = 22, z1 = 44;
+  const P = (u, v) => iso(x, y0 + u, z0 + v), W = y1 - y0, H = z1 - z0;
+  const rect = (u0, v0, u1, v1, fill, op = 1) => el("polygon", { points: pts([P(u0, v0), P(u1, v0), P(u1, v1), P(u0, v1)]), fill, "fill-opacity": op }, g);
+  rect(-1.5, -1.5, W + 1.5, H + 1.5, "#2B2016");
+  const kind = t.id;
+  if (kind === "trafego") { rect(0, 0, W, H, "#0F1A33"); [5, 9, 7, 13, 11, 17].forEach((h, i) => rect(3 + i * 6.5, 2, 7 + i * 6.5, 2 + h, t.cor)); }
+  else if (kind === "conteudo") { rect(0, 0, W, H, "#F5F0E1"); for (let i = 0; i < 6; i++) for (let j = 0; j < 3; j++) rect(2 + i * 6.6, 2 + j * 6.4, 7.6 + i * 6.6, 7 + j * 6.4, (i + j) % 3 ? "#D9D2C0" : t.cor); }
+  else if (kind === "atendimento") { rect(0, 0, W, H, "#B88A5A"); [["#FFE27A", 3, 11], ["#9FE3C1", 14, 4], ["#F7A8C4", 25, 12], ["#A8C8FF", 33, 3], ["#FFE27A", 9, 2]].forEach(([c2, u, v]) => rect(u, v, u + 7, v + 6.5, c2)); }
+  else if (kind === "comercial") { rect(0, 0, W, H, "#F5F0E1"); for (let i = 0; i < 4; i++) rect(4, 4 + i * 4, 4 + (i === 3 ? 16 : 32), 5.6 + i * 4, "#8A8270"); rect(28, 15, 38, 19, t.cor); }
+  else if (kind === "sites") { rect(0, 0, W, H, "#F5F0E1"); rect(0, H - 4, W, H, "#2A3658"); rect(3, 3, 20, 14, t.cor, .9); rect(23, 9, 39, 14, "#C9C2AE"); rect(23, 3, 35, 7, "#C9C2AE"); }
+  else if (kind === "expansao") { rect(0, 0, W, H, "#CFE6E8"); rect(6, 4, 22, 12, "#9CC9A6"); rect(24, 8, 38, 17, "#9CC9A6"); [[12, 9], [30, 13], [18, 6]].forEach(([u, v]) => rect(u, v, u + 2, v + 3, "#E05A5A")); }
+  else { rect(0, 0, W, H, "#141B30"); rect(4, 4, W - 4, H - 4, "#1C2540"); rect(W / 2 - 6, H / 2 - 4, W / 2 + 6, H / 2 + 4, t.cor); }
+}
+
+function bookshelf(x, y, g) {
+  box(x, y, 34, 8, 30, 10, "#5A3F28", "#3F2C1C", "#36261A", g);
+  for (let s = 0; s < 3; s++) {
+    let bx = x + 2;
+    while (bx < x + 31) { const w = 1.6 + srnd() * 2; const h = 5 + srnd() * 3; const col = ["#C65B4E", "#E8C547", "#5B8DD6", "#5BD6A0", "#B48CFF", "#F2A65A", "#E9E2CF"][Math.floor(srnd() * 7)]; el("polygon", { points: faceY(bx, Math.min(x + 32, bx + w), y + 8.05, 12 + s * 9.5, 12 + s * 9.5 + h), fill: col }, g); bx += w + .4; }
+  }
+}
+
+function plant(x, y, g, tall) {
+  box(x, y, 9, 9, 9, 10, "#B45F3C", "#8A4529", "#7A3B22", g);
+  const p = iso(x + 4.5, y + 4.5, tall ? 34 : 26);
+  if (tall) { el("rect", { x: p[0] - .8, y: p[1], width: 1.6, height: 10, fill: "#4A3320" }, g); el("circle", { cx: p[0] - 4, cy: p[1] + 2, r: 6, fill: "#2F7A4D" }, g); el("circle", { cx: p[0] + 4, cy: p[1] - 2, r: 7, fill: "#3E9A60" }, g); el("circle", { cx: p[0], cy: p[1] - 7, r: 5.5, fill: "#4DB073" }, g); }
+  else { el("circle", { cx: p[0], cy: p[1], r: 8, fill: "#3E8F5E" }, g); el("circle", { cx: p[0] + 3, cy: p[1] - 3, r: 4.5, fill: "#56AE74" }, g); }
+}
+
+function lampPool(x, y, g) { const p = iso(x, y, 10.2); el("ellipse", { cx: p[0], cy: p[1], rx: 44, ry: 24, fill: "url(#lamp)" }, g); }
+
+function sofa(x, y, cor, g) {
+  box(x, y, 30, 12, 6, 10, cor, shade(cor, .7), shade(cor, .6), g);
+  box(x, y, 30, 4, 12, 10, shade(cor, 1.1), shade(cor, .75), shade(cor, .65), g);
+  box(x, y, 4, 12, 9, 10, shade(cor, 1.05), shade(cor, .72), shade(cor, .62), g);
+  box(x + 26, y, 4, 12, 9, 10, shade(cor, 1.05), shade(cor, .72), shade(cor, .62), g);
+}
+
+function drawRoom(t) {
+  const c = cell(t.gx, t.gy);
+  const g = el("g", { class: "room", tabindex: "0", role: "button", "aria-label": `Sala ${t.nome}`, "data-id": t.id });
+  // Base e piso de madeira tingido
+  box(c.x, c.y, U, U, 10, 0, shade(t.cor, .34), shade(t.cor, .22), shade(t.cor, .17), g);
+  for (let k = 10; k < U; k += 10) el("line", { x1: iso(c.x + k, c.y, 10)[0], y1: iso(c.x + k, c.y, 10)[1], x2: iso(c.x + k, c.y + U, 10)[0], y2: iso(c.x + k, c.y + U, 10)[1], stroke: shade(t.cor, .26), "stroke-width": ".7" }, g);
+  // Tapete
+  el("polygon", { points: floorRect(c.x + 22, c.y + 30, c.x + U - 12, c.y + U - 10, 10.1), fill: shade(t.cor, .55), "fill-opacity": ".55" }, g);
+  el("polygon", { points: floorRect(c.x + 26, c.y + 34, c.x + U - 16, c.y + U - 14, 10.15), fill: "none", stroke: shade(t.cor, .85), "stroke-opacity": ".35", "stroke-width": ".8" }, g);
+  // Paredes
+  box(c.x, c.y, U, 4, WALL_H - 10, 10, shade(t.cor, .5), shade(t.cor, .3), shade(t.cor, .26), g);
+  box(c.x, c.y, 4, U, WALL_H - 10, 10, shade(t.cor, .5), shade(t.cor, .3), shade(t.cor, .26), g);
+  // Rodapé luminoso
+  el("polygon", { points: faceY(c.x + 4, c.x + U, c.y + 4.05, 10, 11.5), fill: t.cor, "fill-opacity": ".55" }, g);
+  el("polygon", { points: faceX(c.x + 4.05, c.y + 4, c.y + U, 10, 11.5), fill: t.cor, "fill-opacity": ".55" }, g);
+  windowOnBack(c, c.x + 50, c.x + U - 10, g);
+  poster(t, c, g);
+  lampPool(c.x + U * .5, c.y + U * .5, g);
+  if (t.id === "diretoria") { sofa(c.x + 20, c.y + 6, "#7A5C9E", g); }
+  else bookshelf(c.x + 12, c.y + 4.5, g);
+  plant(c.x + 8, c.y + U - 20, g, t.gx + t.gy > 2);
+  // Borda de vidro na frente
+  el("polygon", { class: "edge", points: pts([iso(c.x + U, c.y, 10), iso(c.x + U, c.y + U, 10), iso(c.x, c.y + U, 10)]), fill: "none", stroke: t.cor, "stroke-opacity": ".75", "stroke-width": "1.6" }, g);
+  el("polygon", { points: pts([iso(c.x + U, c.y, 10), iso(c.x + U, c.y + U, 10), iso(c.x, c.y + U, 10)]), fill: "none", stroke: t.cor, "stroke-opacity": ".18", "stroke-width": "6" }, g);
+  // Mesas
+  const n = t.agentes;
+  const spots = [[0.5, 0.52], [0.36, 0.42], [0.72, 0.66], [0.34, 0.74], [0.74, 0.38]];
+  const order = n === 1 ? [0] : n === 2 ? [1, 2] : [1, 0, 2];
+  seats[t.id] = [];
+  order.forEach((si, i) => {
+    const [fx, fy] = spots[si];
+    const dx = c.x + U * fx - 14, dy = c.y + U * fy - 14;
+    box(dx, dy, 28, 18, 2, 20, "#D9B27A", "#9C7646", "#8A683D", g);
+    box(dx + 1, dy + 1, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
+    box(dx + 25, dy + 1, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
+    box(dx + 1, dy + 15, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
+    box(dx + 25, dy + 15, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
+    box(dx + 12, dy + 4, 4, 2, 4, 22, "#1C2540", "#141B30", "#141B30", g);
+    box(dx + 6, dy + 2, 16, 2, 11, 25, "#1C2540", "#141B30", "#141B30", g);
+    el("polygon", { class: "screen", points: pts([iso(dx + 7, dy + 4.05, 26), iso(dx + 21, dy + 4.05, 26), iso(dx + 21, dy + 4.05, 35), iso(dx + 7, dy + 4.05, 35)]), fill: t.cor, "fill-opacity": ".95", style: `animation-delay:${(i * .7).toFixed(1)}s` }, g);
+    box(dx + 8, dy + 9, 11, 4, 1, 22, "#E6E2D6", "#B9B4A6", "#ABA697", g);
+    box(dx + 21, dy + 10, 3, 3, 3, 22, "#F5F0E1", "#CFC8B4", "#C2BBA6", g);
+    box(dx + 9, dy + 27, 10, 3, 14, 10, shade(t.cor, .7), shade(t.cor, .5), shade(t.cor, .45), g);
+    seats[t.id].push({ x: dx + 14, y: dy + 24 });
+  });
+}
+
+function drawLounge() {
+  const c = cell(LOUNGE.gx, LOUNGE.gy);
+  const g = el("g", { "aria-label": "Lounge" });
+  box(c.x, c.y, U, U, 6, 0, "#2A2238", "#1E1829", "#1A1524", g);
+  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) if ((i + j) % 2) el("polygon", { points: floorRect(c.x + i * U / 6, c.y + j * U / 6, c.x + (i + 1) * U / 6, c.y + (j + 1) * U / 6, 6.05), fill: "#332A44" }, g);
+  lampPool(c.x + U * .55, c.y + U * .5, g);
+  // Balcão de café
+  box(c.x + 6, c.y + 8, 12, 46, 16, 6, "#8C6B3F", "#6B5030", "#5E4629", g);
+  box(c.x + 7, c.y + 12, 9, 10, 12, 22, "#2B2F3A", "#1E222B", "#1A1D25", g);
+  const cp = iso(c.x + 11, c.y + 22.1, 30); el("circle", { cx: cp[0], cy: cp[1], r: 1.6, fill: "#FF6B5A" }, g);
+  box(c.x + 8, c.y + 34, 5, 5, 4, 22, "#F5F0E1", "#CFC8B4", "#C2BBA6", g);
+  box(c.x + 8, c.y + 42, 5, 5, 4, 22, "#E8C547", "#B8992F", "#A88A28", g);
+  // Mesa de sinuca
+  const px = c.x + 44, py = c.y + 24;
+  box(px, py, 50, 28, 12, 6, "#5A3A22", "#3F2817", "#352113", g);
+  el("polygon", { points: floorRect(px + 3, py + 3, px + 47, py + 25, 18.1), fill: "#1F7A4C" }, g);
+  [[14, 10, "#F5F0E1"], [30, 14, "#E8C547"], [33, 11, "#C65B4E"], [36, 16, "#5B8DD6"], [32, 17, "#141414"]].forEach(([u, v, col]) => { const p = iso(px + u, py + v, 19.5); el("circle", { cx: p[0], cy: p[1], r: 1.7, fill: col }, g); });
+  // Sofá e plantas
+  sofa(c.x + 50, c.y + U - 22, "#4E6DAE", g);
+  plant(c.x + U - 14, c.y + 6, g, true);
+  plant(c.x + 24, c.y + U - 16, g, false);
+  const sp = iso(c.x + U * .62, c.y + U * .5, 70);
+  const lb = el("text", { x: sp[0], y: sp[1] - 20, "text-anchor": "middle", class: "brain-t" }, g); lb.textContent = "LOUNGE · CAFÉ";
+}
+
+function drawOffice() {
+  svg.textContent = "";
+  seed = 7;
+  defsAll();
+  // Piso geral com ladrilhos
+  el("polygon", { points: pts([iso(-20, -20), iso(TOTAL + 20, -20), iso(TOTAL + 20, TOTAL + 20), iso(-20, TOTAL + 20)]), fill: "#121A30", stroke: "#24304F" });
+  for (let k = -20; k <= TOTAL + 20; k += 17) {
+    el("line", { x1: iso(k, -20)[0], y1: iso(k, -20)[1], x2: iso(k, TOTAL + 20)[0], y2: iso(k, TOTAL + 20)[1], stroke: "#18213B", "stroke-width": ".8" });
+    el("line", { x1: iso(-20, k)[0], y1: iso(-20, k)[1], x2: iso(TOTAL + 20, k)[0], y2: iso(TOTAL + 20, k)[1], stroke: "#18213B", "stroke-width": ".8" });
+  }
   const bc = iso(cellCenter(1, 1).x, cellCenter(1, 1).y, 30);
   const wires = el("g", {});
   TEAMS.forEach(t => { const cc = cellCenter(t.gx, t.gy), c = iso(cc.x, cc.y, 14); el("path", { d: `M${bc[0]},${bc[1]} Q${(bc[0] + c[0]) / 2},${Math.min(bc[1], c[1]) - 40} ${c[0]},${c[1]}`, class: "wire" }, wires); });
 
-  const items = TEAMS.map(t => ({ t, k: t.gx + t.gy })).concat([{ brain: true, k: 2 }]).sort((a, b) => a.k - b.k || (a.brain ? 1 : -1));
-  items.forEach(it => {
-    if (it.brain) { drawBrain(); return; }
-    const t = it.t, c = cell(t.gx, t.gy);
-    const g = el("g", { class: "room", tabindex: "0", role: "button", "aria-label": `Sala ${t.nome}`, "data-id": t.id });
-    box(c.x, c.y, U, U, 10, 0, shade(t.cor, .42), shade(t.cor, .26), shade(t.cor, .2), g);
-    el("polygon", { class: "edge", points: pts([iso(c.x, c.y, 10), iso(c.x + U, c.y, 10), iso(c.x + U, c.y + U, 10), iso(c.x, c.y + U, 10)]), fill: "none", stroke: shade(t.cor, .9), "stroke-opacity": ".55", "stroke-width": "1.2" }, g);
-    box(c.x, c.y, U, 4, 26, 10, shade(t.cor, .5), shade(t.cor, .32), shade(t.cor, .28), g);
-    box(c.x, c.y, 4, U, 26, 10, shade(t.cor, .5), shade(t.cor, .32), shade(t.cor, .28), g);
-    // Planta no canto
-    box(c.x + 8, c.y + 8, 10, 10, 12, 10, "#3B2A1A", "#2A1E12", "#24190F", g);
-    el("circle", { cx: iso(c.x + 13, c.y + 13, 30)[0], cy: iso(c.x + 13, c.y + 13, 30)[1], r: 8, fill: "#3E8F5E" }, g);
-    const n = t.agentes;
-    const spots = [[0.5, 0.5], [0.32, 0.36], [0.7, 0.62], [0.3, 0.68], [0.7, 0.32]];
-    const order = n === 1 ? [0] : n === 2 ? [1, 2] : [1, 0, 2];
-    seats[t.id] = [];
-    order.forEach((si, i) => {
-      const [fx, fy] = spots[si];
-      const dx = c.x + U * fx - 14, dy = c.y + U * fy - 14;
-      box(dx, dy, 28, 18, 12, 10, "#C9A36B", "#8C6B3F", "#7A5C35", g);
-      box(dx + 6, dy + 2, 16, 3, 13, 22, "#1C2540", "#141B30", "#141B30", g);
-      el("polygon", { class: "screen", points: pts([iso(dx + 7, dy + 5, 24), iso(dx + 21, dy + 5, 24), iso(dx + 21, dy + 5, 33), iso(dx + 7, dy + 5, 33)]), fill: t.cor, "fill-opacity": ".9", style: `animation-delay:${(i * .7).toFixed(1)}s` }, g);
-      box(dx + 9, dy + 26, 10, 3, 14, 10, shade(t.cor, .7), shade(t.cor, .5), shade(t.cor, .45), g);
-      seats[t.id].push({ x: dx + 14, y: dy + 24 });
-    });
-  });
+  const items = TEAMS.map(t => ({ t, k: t.gx + t.gy, gx: t.gx }))
+    .concat([{ brain: true, k: 2, gx: 1 }, { lounge: true, k: 1, gx: 0 }])
+    .sort((a, b) => a.k - b.k || b.gx - a.gx);
+  items.forEach(it => { if (it.brain) drawBrain(); else if (it.lounge) drawLounge(); else drawRoom(it.t); });
   agentLayer = el("g", { id: "agents" });
   const labelLayer = el("g", {});
   TEAMS.forEach(t => drawLabel(t, labelLayer));
@@ -289,12 +409,12 @@ function drawBrain() {
   nodes.forEach((n, i) => { if (i) el("line", { x1: p[0], y1: p[1], x2: n[0], y2: n[1], stroke: "#E8C547", "stroke-opacity": ".28", "stroke-width": ".8" }, g); });
   nodes.forEach((n, i) => { if (i) el("circle", { cx: n[0], cy: n[1], r: 2.2, fill: "#F5E7B0" }, g); });
   el("circle", { class: "brain-core", cx: p[0], cy: p[1], r: 7, fill: "#E8C547" }, g);
-  const t1 = el("text", { x: p[0], y: p[1] + 30, "text-anchor": "middle", class: "brain-t" }, g); t1.textContent = "O CÉREBRO · 97 NOTAS";
+  const t1 = el("text", { x: p[0], y: p[1] - 30, "text-anchor": "middle", class: "brain-t" }, g); t1.textContent = "O CÉREBRO · 97 NOTAS";
 }
 
 function drawLabel(t, layer) {
   const c = cell(t.gx, t.gy);
-  const p = iso(c.x, c.y, 44);
+  const p = iso(c.x, c.y, WALL_H + 20);
   const lg = el("g", { class: "room lbl", "data-id": t.id }, layer);
   const bg = el("rect", { class: "lbl-bg", height: 26, rx: 13 }, lg);
   const dot = el("circle", { r: 4, fill: t.cor }, lg);
@@ -335,9 +455,11 @@ function makeSprite(a) {
 }
 
 function describe(a) {
-  if (a.state === "walk") return a.goal === "brain" ? "indo ao cérebro" : a.goal === "visit" ? `indo falar com ${byId[a.visitTeam].nome}` : "dando uma volta";
   const t = currentTask(a.team.id);
-  return t ? "Fazendo: " + t.titulo : pick(a.team.work);
+  if (t) return "Fazendo: " + t.titulo;
+  const q = queuedTask(a.team.id);
+  if (q) return "Na fila: " + q.titulo;
+  return "Livre: sem tarefa na fila";
 }
 
 function spawnAgents() {
@@ -366,32 +488,17 @@ function cellOf(p) { const k = U + GAP; return { gx: Math.max(0, Math.min(2, Mat
 function decide(a) {
   const r = Math.random();
   const t = currentTask(a.team.id);
-  if (r < 0.5) { a.state = "sit"; a.timer = rnd(5, 11); if (Math.random() < 0.45) say(a, t ? "Fazendo: " + t.titulo : pick(a.team.work), 3.2); return; }
-  if (r < 0.68) { const c = cell(a.team.gx, a.team.gy); a.goal = "wander"; routeTo(a, { x: c.x + rnd(24, U - 16), y: c.y + rnd(40, U - 12) }); return; }
-  if (r < 0.88) {
-    const opts = HANDOFFS.filter(h => h[0] === a.team.id);
-    const h = opts.length ? pick(opts) : pick(HANDOFFS.filter(h => h[1] === a.team.id).map(h => [a.team.id, h[0], pick(GREET), pick(GREET)]));
-    const partnerSeat = pick(seats[h[1]]);
-    a.goal = "visit"; a.visitTeam = h[1]; a.lines = [h[2], h[3]];
-    routeTo(a, { x: partnerSeat.x + rnd(14, 20), y: partnerSeat.y + rnd(-2, 8) });
-    return;
-  }
-  const bc = cellCenter(1, 1);
-  const ang = rnd(0, Math.PI * 2);
-  a.goal = "brain"; routeTo(a, { x: bc.x + Math.cos(ang) * 30, y: bc.y + Math.sin(ang) * 30 });
+  if (t) { a.state = "sit"; a.timer = rnd(6, 12); if (Math.random() < 0.35) say(a, "Fazendo: " + t.titulo, 3.2); return; }
+  if (r < 0.55) { a.state = "sit"; a.timer = rnd(5, 11); return; }
+  if (r < 0.8) { const c = cell(a.team.gx, a.team.gy); a.goal = "wander"; routeTo(a, { x: c.x + rnd(24, U - 16), y: c.y + rnd(40, U - 12) }); return; }
+  const lc = cell(LOUNGE.gx, LOUNGE.gy);
+  a.goal = "cafe"; routeTo(a, { x: lc.x + rnd(24, 40), y: lc.y + rnd(16, 52) });
 }
 
 function arrive(a) {
-  if (a.goal === "home") { a.state = "sit"; a.timer = rnd(6, 12); a.x = a.seat.x; a.y = a.seat.y; a.goal = null; return; }
-  if (a.goal === "visit") {
-    const partner = agents.filter(b => b.team.id === a.visitTeam && b.state === "sit").sort((p, q) => dist(p, a) - dist(q, a))[0];
-    a.state = "pause"; a.timer = 5;
-    a.face = partner && partner.x < a.x ? -1 : 1;
-    say(a, a.lines[0], 2.4);
-    if (partner) setTimeout(() => say(partner, a.lines[1], 2.4), 1500);
-    a.after = "home"; return;
-  }
-  if (a.goal === "brain") { a.state = "pause"; a.timer = 3.5; say(a, "consultando o cérebro…", 3); a.thinking = true; a.after = "home"; return; }
+  if (a.goal === "home") { a.state = "sit"; a.timer = rnd(6, 12); a.x = a.seat.x; a.y = a.seat.y; a.goal = null; if (a.afterSay) { say(a, a.afterSay, 3.2); a.afterSay = null; } return; }
+  if (a.goal === "cafe") { a.state = "pause"; a.timer = rnd(3, 5); a.face = -1; say(a, "☕", 2.5); a.after = "home"; return; }
+  if (a.goal === "brain") { a.state = "pause"; a.timer = 3.2; a.thinking = true; say(a, "Lendo o cérebro: " + (a.brainFor || ""), 3); a.after = "home"; a.afterSay = a.brainFor ? "Começando: " + a.brainFor : null; return; }
   if (a.goal === "deliver") {
     const tgt = agents.filter(b => b.team.id === a.deliverTeam).sort((p, q) => dist(p, a) - dist(q, a))[0];
     a.state = "pause"; a.timer = 3.8; a.after = "home";
@@ -469,6 +576,7 @@ function loop(now) {
 }
 
 function currentTask(teamId) { return tasks.find(t => t.equipe === teamId && t.status === "fazendo"); }
+function queuedTask(teamId) { return tasks.find(t => t.equipe === teamId && t.status === "fila"); }
 
 function onTaskEvent(kind, t) {
   if (REDUCED) return;
@@ -484,8 +592,12 @@ function onTaskEvent(kind, t) {
   } else {
     const a = agents.filter(x => x.team.id === t.equipe).sort((p, q) => (p.state === "sit" ? 0 : 1) - (q.state === "sit" ? 0 : 1))[0];
     if (!a) return;
-    if (kind === "fazendo") say(a, "Começando: " + t.titulo, 3.4);
-    if (kind === "feito") { say(a, "Feito ✓ " + t.titulo, 3.4); a.jump = 0.5; agents.filter(x => x.team.id === t.equipe && x !== a).forEach(x => x.jump = 0.5); }
+    if (kind === "fazendo") {
+      const bc = cellCenter(1, 1), ang = rnd(0, Math.PI * 2);
+      if (a.bubble) { a.bubble.g.remove(); a.bubble = null; }
+      a.goal = "brain"; a.brainFor = t.titulo; routeTo(a, { x: bc.x + Math.cos(ang) * 30, y: bc.y + Math.sin(ang) * 30 });
+    }
+    if (kind === "feito") { say(a, "Feito ✓ " + (t.resultado || t.titulo), 3.6); a.jump = 0.5; agents.filter(x => x.team.id === t.equipe && x !== a).forEach(x => x.jump = 0.5); }
   }
 }
 
@@ -515,7 +627,7 @@ function renderPanel() {
   if (!selTeam) {
     title.textContent = "Todas as equipes"; clear.hidden = true;
     const p = document.createElement("p");
-    p.textContent = "Peça uma tarefa e a Diretoria leva até a equipe certa. Clique num agente para saber o que ele está fazendo.";
+    p.textContent = "Só tarefas reais da fila aparecem aqui. Os agentes do Claude Code atualizam a fila quando começam e terminam; agente sem tarefa fica livre.";
     card.appendChild(p);
   } else {
     const t = byId[selTeam];
@@ -556,6 +668,7 @@ function renderTasks() {
     if (t.cliente) { const c = document.createElement("span"); c.textContent = t.cliente; meta.appendChild(c); }
     if (t.motivo) { const m = document.createElement("span"); m.textContent = t.motivo; meta.appendChild(m); }
     body.append(ti, meta);
+    if (t.resultado) { const r = document.createElement("span"); r.className = "t-res"; r.textContent = "Resultado: " + t.resultado; body.appendChild(r); }
     const act = document.createElement("div"); act.className = "t-actions";
     const b = document.createElement("button"); b.type = "button"; b.textContent = NEXT_LBL[t.status] || "começar";
     b.addEventListener("click", () => setStatus(t, NEXT[t.status] || "fazendo"));

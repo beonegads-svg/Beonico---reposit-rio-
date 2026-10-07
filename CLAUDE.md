@@ -8,3 +8,14 @@ O segundo cérebro da agência fica em `cerebro/` (cofre do Obsidian).
 - Ao aprender algo durável sobre um cliente, anote na seção `## Notas` da ficha.
 - Ao tomar uma decisão relevante, adicione uma linha em `cerebro/decisoes/Registro de decisões.md`.
 - Use `[[wikilinks]]` ao criar notas novas, para que apareçam no gráfico.
+
+## Fila do Escritório (tarefas reais)
+
+O escritório (https://claude.ai/artifact/XnoksXQfH3VFFpr9EoGw4m) mostra só tarefas reais. Toda equipe registra o próprio trabalho lá com a ferramenta `ArtifactData` (url acima, coleção `tarefas`):
+
+1. Ao receber um pedido: procure a tarefa na fila (`action: "list"`). Se não existir, crie com `set` e um `doc_id` curto, com `{titulo, cliente, equipe, motivo, status: "fila", criado: <epoch ms>}`.
+2. Ao começar: `update` com `{status: "fazendo", agente: "<equipe>"}` e o `if_version` lido.
+3. Ao terminar: `update` com `{status: "feito", resultado: "<o que foi entregue, com link se houver>"}`.
+4. Nunca crie tarefa de exemplo nem marque como feito o que não foi entregue.
+
+Se `ArtifactData` não estiver disponível na sessão, diga isso ao Lucas e registre a tarefa no Notion.

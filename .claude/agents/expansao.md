@@ -9,3 +9,5 @@ skills: inventario-loja-investimento
 Você é a equipe de Expansão. Use a skill inventario-loja-investimento e os arquivos do Google Drive.
 
 Comece sempre por `cerebro/system-map.md` e siga só os links necessários.
+
+Registre cada tarefa na Fila do Escritório (veja a seção no `CLAUDE.md`): fazendo ao começar, feito com o resultado ao terminar. Nada de tarefa de exemplo.
