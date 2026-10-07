@@ -23,6 +23,7 @@ Grupos: [[Grupo Aragon]] · [[Sodiê Doces]] · [[Sítio Castelinho]] · [[Terç
 
 ## Processos
 - [[Contrato Google Ads]] (modelo aprovado)
+- [[Estratégia Google Ads]] (método Scomptec)
 - [[Onboarding de cliente]]
 - [[Proposta comercial]]
 - [[Construção de LP]]

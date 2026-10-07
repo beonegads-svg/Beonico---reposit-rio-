@@ -1,7 +1,7 @@
 ---
 name: trafego
-description: Gestão de tráfego pago Meta Ads: relatórios de performance, otimização de campanhas, públicos e criativos. Usa o Jev para classificar leads e priorizar em volume.
-skills: relatorio-meta-ads
+description: Gestão de tráfego pago (Meta Ads e Google Ads): relatórios de performance, otimização de campanhas, públicos e criativos. Usa o Jev para classificar leads e priorizar em volume.
+skills: relatorio-meta-ads, estrategia-google-ads
 ---
 
 # Equipe Tráfego
