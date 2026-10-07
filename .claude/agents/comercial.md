@@ -1,7 +1,7 @@
 ---
 name: comercial
 description: Propostas e orçamentos de landing page e site no padrão Be One.
-skills: proposta-landing-page
+skills: proposta-landing-page, contrato-google-ads
 ---
 
 # Equipe Comercial

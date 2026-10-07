@@ -5,7 +5,8 @@ tags: [indice]
 
 Ponto de partida do cérebro. Claude lê esta nota primeiro e segue os links só até o que a tarefa precisa.
 
-## Clientes ativos (7)
+## Clientes ativos (8)
+- [[Typmann]]
 - [[Cowboy Marmoraria]]
 - [[Del Vecchio]]
 - [[Marcão - Sitio Castelinho]]
@@ -21,6 +22,7 @@ Grupos: [[Grupo Aragon]] · [[Sodiê Doces]] · [[Sítio Castelinho]] · [[Terç
 [[Completão]] · [[Conteúdo]] · [[Tráfego Pago]] · [[Pontual]] · [[GMN]] · [[Mentoria]]
 
 ## Processos
+- [[Contrato Google Ads]] (modelo aprovado)
 - [[Onboarding de cliente]]
 - [[Proposta comercial]]
 - [[Construção de LP]]

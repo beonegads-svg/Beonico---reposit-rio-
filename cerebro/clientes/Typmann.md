@@ -1,0 +1,17 @@
+---
+tags: [cliente, ativo]
+estado: Ativo
+plano: Google Ads
+---
+# Typmann
+
+Typmann Comercial Importadora e Exportadora Ltda. — CNPJ 35.858.043/0001-97 — Guarulhos/SP (filial em Itajaí/SC). Importação e comércio de matérias-primas, aditivos alimentícios, químicos e petroquímicos.
+
+- Projeto: gestão de Google Ads, R$ 2.000/mês, 12 meses com carência de 6, início 10/10/2026
+- Contrato: [[Contrato Google Ads]] — aprovado em 07/10/2026
+- Ainda não cadastrado no Notion
+
+## Notas
+_Decisões, contexto e aprendizados sobre o cliente._
+
+← [[system-map]]
