@@ -1,104 +1,84 @@
 <title>Escritório Be One</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: escritório isométrico à noite (planta navy, luz dourada da marca) à esquerda; fila de tarefas à direita; empilha no celular. Visual único, escuro por escolha. */
+/* Layout: escritório 3D de dia (piso claro, divisórias cinza, cadeiras roxas), etiquetas pretas por área; fila de tarefas à direita; empilha no celular. Visual único, claro por escolha. */
 :root {
-  --floor: #0B1020;
-  --panel: #121A30;
-  --panel-2: #18223D;
-  --line: #2A3658;
-  --ink: #EEF1F8;
-  --muted: #8E9AB8;
-  --gold: #E8C547;
-  --gold-soft: rgba(232,197,71,.16);
-  --ok: #5BD6A0;
-  --doing: #6FB7FF;
-  --wait: #F2A65A;
+  --page: #E9ECF2;
+  --panel: #FFFFFF;
+  --panel-2: #F4F6FA;
+  --line: #D5DAE4;
+  --ink: #161A26;
+  --muted: #5E6779;
+  --gold: #B8901C;
+  --gold-btn: #E8C547;
+  --tag: #14161C;
+  --ok: #1E9E66;
+  --doing: #2F7BD8;
+  --wait: #D9822B;
   --f-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-  color-scheme: dark;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
 }
 html, body { height: 100%; }
-body {
-  background: var(--floor);
-  color: var(--ink);
-  font-family: var(--f-body);
-  font-size: 15px;
-  line-height: 1.45;
-}
+body { background: var(--page); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.45; }
 .wrap { padding-inline: 16px; padding-block: 16px 32px; max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
 
-header.top {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;
-  padding-block: 10px; border-bottom: 1px solid var(--line);
-}
+header.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 6px 12px; border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.brand h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(22px, 3vw, 30px); letter-spacing: -.01em; margin: 0; text-wrap: balance; }
-.brand h1 b { color: var(--gold); font-weight: 800; }
+.brand h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(22px, 3vw, 30px); letter-spacing: -.01em; margin: 0; }
+.brand h1 b { color: var(--gold); }
 .brand .sub { font-family: var(--f-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
 .stats { display: flex; gap: 8px; flex-wrap: wrap; font-family: var(--f-mono); font-size: 12px; }
 .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); font-variant-numeric: tabular-nums; }
 .chip strong { color: var(--ink); font-weight: 500; }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .chip.fila .dot { color: var(--wait); } .chip.fazendo .dot { color: var(--doing); } .chip.feito .dot { color: var(--ok); }
-.chip.live .dot { color: var(--ok); box-shadow: 0 0 0 3px rgba(91,214,160,.18); }
+.chip.live .dot { color: var(--ok); box-shadow: 0 0 0 3px rgba(30,158,102,.18); }
 .chip.off .dot { color: var(--muted); }
 
 main.grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
 @media (max-width: 980px) { main.grid { grid-template-columns: minmax(0, 1fr); } }
 
-.office { position: relative; min-width: 0; background: radial-gradient(ellipse at 50% 45%, #16204000 0%, #0B1020 70%), var(--floor); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.office svg { display: block; width: 100%; height: auto; max-width: 100%; }
-.office .hint { position: absolute; left: 14px; bottom: 12px; font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; pointer-events: none; }
+.office { position: relative; min-width: 0; border-radius: 14px; overflow: hidden; background: linear-gradient(#DCE4F0, #EEF1F6); border: 1px solid var(--line); aspect-ratio: 16 / 10; max-width: 100%; }
+@media (max-width: 640px) { .office { aspect-ratio: 4 / 5; } }
+.office canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.tag { position: absolute; transform: translate(-50%, -100%); display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--tag); color: #fff; border-radius: 6px; font: 700 14px var(--f-body); white-space: nowrap; pointer-events: auto; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.18); }
+.tag .d { width: 11px; height: 11px; border-radius: 50%; }
+.tag .n { font: 500 11px var(--f-mono); color: #B9BFCC; }
+.tag .n:empty { display: none; }
+.tag.sel { outline: 2px solid var(--gold-btn); outline-offset: 2px; }
+.tag.brain { background: #2A2205; color: #F5E7B0; }
+.bubble { position: absolute; transform: translate(-50%, -100%); background: #fff; color: var(--ink); font: 600 12px var(--f-body); padding: 5px 10px; border-radius: 12px; white-space: nowrap; max-width: 260px; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 3px 10px rgba(20,22,28,.18); border: 1px solid #E3E6EE; }
+.hint { position: absolute; left: 12px; bottom: 10px; font: 400 11px var(--f-mono); color: #4A5263; background: rgba(255,255,255,.75); padding: 3px 8px; border-radius: 6px; pointer-events: none; }
+.fallback { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); }
 
-/* SVG */
-.room { cursor: pointer; outline: none; }
-.room .top { transition: filter .2s; }
-.room:hover .top, .room:focus-visible .top { filter: brightness(1.25); }
-.room.sel .edge { stroke: var(--gold); stroke-width: 2.5; }
-.room:focus-visible .edge { stroke: var(--gold); stroke-width: 2.5; }
-.lbl-bg { fill: rgba(11,16,32,.88); stroke: var(--line); }
-.room.sel .lbl-bg { stroke: var(--gold); }
-.lbl-name { fill: var(--ink); font-family: var(--f-display); font-weight: 700; font-size: 13.5px; }
-.lbl-meta { fill: var(--muted); font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .04em; }
-.lbl-num { fill: var(--gold); font-family: var(--f-display); font-weight: 800; font-size: 22px; }
-.wire { stroke: var(--gold); stroke-opacity: .35; stroke-width: 1.2; stroke-dasharray: 3 7; fill: none; animation: flow 2.4s linear infinite; }
-@keyframes flow { to { stroke-dashoffset: -40; } }
-.head { animation: bob 2.6s ease-in-out infinite; }
-@keyframes bob { 50% { transform: translateY(-2.5px); } }
-.screen { animation: glow 3.2s ease-in-out infinite; }
-@keyframes glow { 50% { opacity: .55; } }
-.brain-core { animation: pulse 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-@keyframes pulse { 50% { transform: scale(1.12); opacity: .8; } }
-@media (prefers-reduced-motion: reduce) { .wire, .head, .screen, .brain-core { animation: none; } }
-
-/* Painel */
 aside.panel { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; }
 .panel-h { padding: 16px 16px 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
-.panel-h h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.panel-h h2 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .panel-h h2 button { font: 500 12px var(--f-mono); color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
-.panel-h h2 button:hover { color: var(--ink); }
 .team-card { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--muted); }
 .team-card p { margin: 0; }
+.team-card .path { font-family: var(--f-mono); font-size: 11.5px; }
 .tools { display: flex; flex-wrap: wrap; gap: 6px; }
 .tool { font: 500 11.5px var(--f-mono); color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; }
 
 form.add { padding: 14px 16px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
 form.add label { font: 500 11px var(--f-mono); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
-input, select, textarea { font: 400 14px var(--f-body); color: var(--ink); background: var(--floor); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; min-width: 0; }
+input, select, textarea { font: 400 14px var(--f-body); color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; min-width: 0; }
 textarea { resize: vertical; min-height: 58px; width: 100%; }
 input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
-.row > select { flex: 1 1 140px; } .row > input { flex: 1 1 140px; }
-.btn { font: 600 14px var(--f-body); color: #1A1606; background: var(--gold); border: 0; border-radius: 8px; padding: 10px 14px; cursor: pointer; }
+.row > select, .row > input { flex: 1 1 140px; }
+.btn { font: 700 14px var(--f-body); color: #1A1606; background: var(--gold-btn); border: 0; border-radius: 8px; padding: 10px 14px; cursor: pointer; }
 .btn:disabled { opacity: .55; cursor: progress; }
 .form-msg { font-size: 12.5px; color: var(--muted); min-height: 1.2em; margin: 0; }
 
 .filters { display: flex; gap: 6px; padding: 12px 16px 0; flex-wrap: wrap; }
 .filters button { font: 500 12px var(--f-mono); color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
-.filters button[aria-pressed="true"] { color: var(--ink); border-color: var(--gold); background: var(--gold-soft); }
+.filters button[aria-pressed="true"] { color: var(--ink); border-color: var(--gold); background: #FBF3D6; }
 ul.tasks { list-style: none; margin: 0; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px; max-height: 620px; overflow-y: auto; }
 li.task { display: grid; grid-template-columns: 4px minmax(0,1fr) auto; gap: 10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 10px 10px 0; overflow: hidden; }
 li.task .bar { border-radius: 0 3px 3px 0; }
@@ -107,23 +87,16 @@ li.task[data-s="fazendo"] .bar { background: var(--doing); }
 li.task[data-s="feito"] .bar { background: var(--ok); }
 li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
 .t-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.t-title { font-weight: 500; font-size: 14px; overflow-wrap: anywhere; }
+.t-title { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
 .t-meta { font: 400 11.5px var(--f-mono); color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
-.t-meta .tm { color: var(--ink); }
-.t-actions { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
-.t-actions button { font: 500 11.5px var(--f-mono); color: var(--ink); background: var(--floor); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
-.t-actions button:hover { border-color: var(--gold); }
-.empty { color: var(--muted); font-size: 13.5px; padding: 18px 4px; text-align: center; }
-.empty strong { color: var(--ink); font-weight: 600; }
-.agent { cursor: pointer; }
+.t-meta .tm { font-weight: 500; }
 .t-res { font-size: 12.5px; color: var(--ok); overflow-wrap: anywhere; }
-.brain-t { fill: #F5E7B0; font: 500 10.5px var(--f-mono); letter-spacing: .08em; }
-.agent.thinking { filter: drop-shadow(0 0 6px rgba(232,197,71,.9)); }
-.bubble-bg { fill: #F5F0E1; stroke: rgba(11,16,32,.25); }
-.bubble-t { fill: #141A2E; font: 600 11px var(--f-body); }
-.room.lbl { cursor: pointer; }
-.panel-h .path { font-family: var(--f-mono); font-size: 11.5px; }
+.t-actions { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.t-actions button { font: 500 11.5px var(--f-mono); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
+.t-actions button:hover { border-color: var(--gold); }
 .t-actions select.mv { font: 500 11px var(--f-mono); padding: 2px 4px; border-radius: 6px; max-width: 110px; }
+.empty { color: var(--muted); font-size: 13.5px; padding: 18px 4px; text-align: center; }
+.empty strong { color: var(--ink); }
 </style>
 
 <div class="wrap">
@@ -141,32 +114,26 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
   </header>
 
   <main class="grid">
-    <section class="office" aria-label="Planta do escritório">
-      <svg id="map" viewBox="90 50 820 590" role="img" aria-label="Escritório isométrico com sete salas de equipe ligadas ao cérebro central"></svg>
-      <span class="hint">Clique numa sala ou num agente</span>
+    <section class="office" id="office" aria-label="Escritório em 3D">
+      <div class="overlay" id="overlay"></div>
+      <span class="hint">Arraste para girar · role para aproximar · clique num agente</span>
     </section>
 
     <aside class="panel">
       <div class="panel-h">
         <h2><span id="p-title">Todas as equipes</span><button type="button" id="p-clear" hidden>ver todas</button></h2>
-        <div class="team-card" id="p-card">
-          <p>Peça uma tarefa e a Diretoria escolhe a equipe certa. Cada sala é um agente em <code>.claude/agents/</code> que lê o mesmo cérebro.</p>
-        </div>
+        <div class="team-card" id="p-card"></div>
       </div>
-
       <form class="add" id="add">
         <label for="f-titulo">Nova tarefa</label>
         <textarea id="f-titulo" placeholder="Ex.: relatório de outubro da Sodiê Pinda" required></textarea>
         <div class="row">
-          <select id="f-equipe" aria-label="Equipe">
-            <option value="auto">Claude escolhe a equipe</option>
-          </select>
+          <select id="f-equipe" aria-label="Equipe"><option value="auto">Claude escolhe a equipe</option></select>
           <input id="f-cliente" placeholder="Cliente (opcional)" aria-label="Cliente">
         </div>
         <button class="btn" id="f-btn" type="submit">Pôr na fila</button>
         <p class="form-msg" id="f-msg"></p>
       </form>
-
       <div class="filters" role="group" aria-label="Filtrar por estado">
         <button type="button" data-f="ativas" aria-pressed="true">Ativas</button>
         <button type="button" data-f="fila" aria-pressed="false">Fila</button>
@@ -180,520 +147,362 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
   </main>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 const TEAMS = [
   { id: "diretoria",   nome: "Diretoria",   cor: "#E8C547", gx: 0, gy: 0, agentes: 1, desc: "Prioriza, cobra pendências e distribui o trabalho.", tools: ["gerente-lucas", "Notion"] },
-  { id: "atendimento", nome: "Atendimento", cor: "#F28FB1", gx: 1, gy: 0, agentes: 2, desc: "Onboarding, perfil, histórico e felicidade dos clientes.", tools: ["client-profile", "Notion", "Google Calendar"] },
-  { id: "conteudo",    nome: "Conteúdo",    cor: "#B48CFF", gx: 2, gy: 0, agentes: 3, desc: "Lotes do mês, pautas, roteiros e peças.", tools: ["content-planning", "client-profile", "Canva"] },
-  { id: "trafego",     nome: "Tráfego",     cor: "#6FB7FF", gx: 2, gy: 1, agentes: 3, desc: "Meta Ads: relatórios, otimização, públicos. Usa o Jev para triagem.", tools: ["relatorio-meta-ads", "Meta Ads", "TypeSafe Jev"] },
-  { id: "comercial",   nome: "Comercial",   cor: "#F2A65A", gx: 2, gy: 2, agentes: 1, desc: "Propostas e orçamentos de LP e site.", tools: ["proposta-landing-page"] },
-  { id: "sites",       nome: "Sites",       cor: "#5BD6A0", gx: 1, gy: 2, agentes: 2, desc: "Landing pages e sites depois da proposta aprovada.", tools: ["landing-page-build", "Canva"] },
-  { id: "expansao",    nome: "Expansão",    cor: "#4DD0E1", gx: 0, gy: 2, agentes: 1, desc: "Inventário de lojas e investimento de franquia.", tools: ["inventario-loja-investimento", "Google Drive"] },
+  { id: "atendimento", nome: "Atendimento", cor: "#E9699A", gx: 1, gy: 0, agentes: 2, desc: "Onboarding, perfil, histórico e felicidade dos clientes.", tools: ["client-profile", "Notion", "Google Calendar"] },
+  { id: "conteudo",    nome: "Conteúdo",    cor: "#9A6BF0", gx: 2, gy: 0, agentes: 3, desc: "Lotes do mês, pautas, roteiros e peças.", tools: ["content-planning", "client-profile", "Canva"] },
+  { id: "trafego",     nome: "Tráfego",     cor: "#3D8EF0", gx: 2, gy: 1, agentes: 3, desc: "Meta Ads: relatórios, otimização, públicos. Usa o Jev para triagem.", tools: ["relatorio-meta-ads", "Meta Ads", "TypeSafe Jev"] },
+  { id: "comercial",   nome: "Comercial",   cor: "#EE8B35", gx: 2, gy: 2, agentes: 1, desc: "Propostas e orçamentos de LP e site.", tools: ["proposta-landing-page"] },
+  { id: "sites",       nome: "Sites",       cor: "#2FB57A", gx: 1, gy: 2, agentes: 2, desc: "Landing pages e sites depois da proposta aprovada.", tools: ["landing-page-build", "Canva"] },
+  { id: "expansao",    nome: "Expansão",    cor: "#22A9BD", gx: 0, gy: 2, agentes: 1, desc: "Inventário de lojas e investimento de franquia.", tools: ["inventario-loja-investimento", "Google Drive"] },
 ];
-const BRAIN = { gx: 1, gy: 1 };
 const byId = Object.fromEntries(TEAMS.map(t => [t.id, t]));
 const NEXT = { fila: "fazendo", fazendo: "feito", feito: "fila" };
 const NEXT_LBL = { fila: "começar", fazendo: "concluir", feito: "reabrir" };
-const GREET = ["oi!", "e aí?", "bom dia!", "café?", "bora!", "👋"];
-
-/* ---------- Isometria ---------- */
-const svg = document.getElementById("map");
-const NS = "http://www.w3.org/2000/svg";
-const C = Math.cos(Math.PI / 6), S = Math.sin(Math.PI / 6);
-const U = 118, GAP = 34, OX = 500, OY = 150;
-const iso = (x, y, z = 0) => [OX + (x - y) * C, OY + (x + y) * S - z];
-const isoL = (x, y, z = 0) => [(x - y) * C, (x + y) * S - z];
-const pts = a => a.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
-function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
-function shade(hex, f) { const n = parseInt(hex.slice(1), 16); const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255; const m = v => Math.max(0, Math.min(255, Math.round(v * f))); return `rgb(${m(r)},${m(g)},${m(b)})`; }
-function box(x, y, w, d, h, z, top, left, right, parent, P = iso) {
-  const g = el("g", {}, parent);
-  el("polygon", { points: pts([P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)]), fill: left }, g);
-  el("polygon", { points: pts([P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)]), fill: right }, g);
-  el("polygon", { points: pts([P(x, y, z + h), P(x + w, y, z + h), P(x + w, y + d, z + h), P(x, y + d, z + h)]), fill: top, class: "top" }, g);
-  return g;
-}
-const cell = (gx, gy) => ({ x: gx * (U + GAP), y: gy * (U + GAP) });
-const cellCenter = (gx, gy) => { const c = cell(gx, gy); return { x: c.x + U / 2, y: c.y + U / 2 }; };
-const TOTAL = 3 * U + 2 * GAP;
-
-const seats = {};
-let agentLayer, bubbleLayer;
-
-const LOUNGE = { gx: 0, gy: 1 };
-const WALL_H = 46;
-let seed = 7;
-const srnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-
-// Faces de parede: plano y = const (parede do fundo) e plano x = const (parede esquerda)
-const faceY = (x0, x1, y, z0, z1) => pts([iso(x0, y, z0), iso(x1, y, z0), iso(x1, y, z1), iso(x0, y, z1)]);
-const faceX = (x, y0, y1, z0, z1) => pts([iso(x, y0, z0), iso(x, y1, z0), iso(x, y1, z1), iso(x, y0, z1)]);
-const floorRect = (x0, y0, x1, y1, z) => pts([iso(x0, y0, z), iso(x1, y0, z), iso(x1, y1, z), iso(x0, y1, z)]);
-
-function defsAll() {
-  const defs = el("defs", {});
-  const rg = el("radialGradient", { id: "brainGlow" }, defs);
-  el("stop", { offset: "0", "stop-color": "#E8C547", "stop-opacity": ".55" }, rg);
-  el("stop", { offset: "1", "stop-color": "#E8C547", "stop-opacity": "0" }, rg);
-  const lamp = el("radialGradient", { id: "lamp" }, defs);
-  el("stop", { offset: "0", "stop-color": "#FFE7A8", "stop-opacity": ".32" }, lamp);
-  el("stop", { offset: "1", "stop-color": "#FFE7A8", "stop-opacity": "0" }, lamp);
-  const sky = el("linearGradient", { id: "sky", x1: "0", y1: "0", x2: "0", y2: "1" }, defs);
-  el("stop", { offset: "0", "stop-color": "#0A1230" }, sky);
-  el("stop", { offset: ".7", "stop-color": "#1B2758" }, sky);
-  el("stop", { offset: "1", "stop-color": "#3A3170" }, sky);
-}
-
-function windowOnBack(c, x0, x1, g) {
-  const y = c.y + 4.05, z0 = 22, z1 = WALL_H + 4;
-  el("polygon", { points: faceY(x0 - 1.5, x1 + 1.5, y, z0 - 2, z1 + 1.5), fill: "#0B1020" }, g);
-  el("polygon", { points: faceY(x0, x1, y, z0, z1), fill: "url(#sky)" }, g);
-  // Silhueta de prédios
-  let x = x0;
-  while (x < x1 - 2) {
-    const w = 4 + srnd() * 6, h = 4 + srnd() * 14, xe = Math.min(x1, x + w);
-    el("polygon", { points: faceY(x, xe, y, z0, z0 + h), fill: "#121A3A" }, g);
-    for (let k = 0; k < 3; k++) if (srnd() < .5) { const lx = x + srnd() * (xe - x - 1), lz = z0 + 1 + srnd() * (h - 2); el("polygon", { points: faceY(lx, lx + 1, y, lz, lz + 1.2), fill: "#FFD27A", "fill-opacity": ".85" }, g); }
-    x = xe + .6;
-  }
-  for (let k = 0; k < 4; k++) { const sx = x0 + srnd() * (x1 - x0), sz = z1 - 2 - srnd() * 6; const p = iso(sx, y, sz); el("circle", { cx: p[0], cy: p[1], r: .7, fill: "#fff", "fill-opacity": ".8" }, g); }
-  const mid = (x0 + x1) / 2;
-  el("polygon", { points: faceY(mid - .6, mid + .6, y, z0, z1), fill: "#0B1020" }, g);
-}
-
-function poster(t, c, g) {
-  const x = c.x + 4.05, y0 = c.y + 24, y1 = c.y + 66, z0 = 22, z1 = 44;
-  const P = (u, v) => iso(x, y0 + u, z0 + v), W = y1 - y0, H = z1 - z0;
-  const rect = (u0, v0, u1, v1, fill, op = 1) => el("polygon", { points: pts([P(u0, v0), P(u1, v0), P(u1, v1), P(u0, v1)]), fill, "fill-opacity": op }, g);
-  rect(-1.5, -1.5, W + 1.5, H + 1.5, "#2B2016");
-  const kind = t.id;
-  if (kind === "trafego") { rect(0, 0, W, H, "#0F1A33"); [5, 9, 7, 13, 11, 17].forEach((h, i) => rect(3 + i * 6.5, 2, 7 + i * 6.5, 2 + h, t.cor)); }
-  else if (kind === "conteudo") { rect(0, 0, W, H, "#F5F0E1"); for (let i = 0; i < 6; i++) for (let j = 0; j < 3; j++) rect(2 + i * 6.6, 2 + j * 6.4, 7.6 + i * 6.6, 7 + j * 6.4, (i + j) % 3 ? "#D9D2C0" : t.cor); }
-  else if (kind === "atendimento") { rect(0, 0, W, H, "#B88A5A"); [["#FFE27A", 3, 11], ["#9FE3C1", 14, 4], ["#F7A8C4", 25, 12], ["#A8C8FF", 33, 3], ["#FFE27A", 9, 2]].forEach(([c2, u, v]) => rect(u, v, u + 7, v + 6.5, c2)); }
-  else if (kind === "comercial") { rect(0, 0, W, H, "#F5F0E1"); for (let i = 0; i < 4; i++) rect(4, 4 + i * 4, 4 + (i === 3 ? 16 : 32), 5.6 + i * 4, "#8A8270"); rect(28, 15, 38, 19, t.cor); }
-  else if (kind === "sites") { rect(0, 0, W, H, "#F5F0E1"); rect(0, H - 4, W, H, "#2A3658"); rect(3, 3, 20, 14, t.cor, .9); rect(23, 9, 39, 14, "#C9C2AE"); rect(23, 3, 35, 7, "#C9C2AE"); }
-  else if (kind === "expansao") { rect(0, 0, W, H, "#CFE6E8"); rect(6, 4, 22, 12, "#9CC9A6"); rect(24, 8, 38, 17, "#9CC9A6"); [[12, 9], [30, 13], [18, 6]].forEach(([u, v]) => rect(u, v, u + 2, v + 3, "#E05A5A")); }
-  else { rect(0, 0, W, H, "#141B30"); rect(4, 4, W - 4, H - 4, "#1C2540"); rect(W / 2 - 6, H / 2 - 4, W / 2 + 6, H / 2 + 4, t.cor); }
-}
-
-function bookshelf(x, y, g) {
-  box(x, y, 34, 8, 30, 10, "#5A3F28", "#3F2C1C", "#36261A", g);
-  for (let s = 0; s < 3; s++) {
-    let bx = x + 2;
-    while (bx < x + 31) { const w = 1.6 + srnd() * 2; const h = 5 + srnd() * 3; const col = ["#C65B4E", "#E8C547", "#5B8DD6", "#5BD6A0", "#B48CFF", "#F2A65A", "#E9E2CF"][Math.floor(srnd() * 7)]; el("polygon", { points: faceY(bx, Math.min(x + 32, bx + w), y + 8.05, 12 + s * 9.5, 12 + s * 9.5 + h), fill: col }, g); bx += w + .4; }
-  }
-}
-
-function plant(x, y, g, tall) {
-  box(x, y, 9, 9, 9, 10, "#B45F3C", "#8A4529", "#7A3B22", g);
-  const p = iso(x + 4.5, y + 4.5, tall ? 34 : 26);
-  if (tall) { el("rect", { x: p[0] - .8, y: p[1], width: 1.6, height: 10, fill: "#4A3320" }, g); el("circle", { cx: p[0] - 4, cy: p[1] + 2, r: 6, fill: "#2F7A4D" }, g); el("circle", { cx: p[0] + 4, cy: p[1] - 2, r: 7, fill: "#3E9A60" }, g); el("circle", { cx: p[0], cy: p[1] - 7, r: 5.5, fill: "#4DB073" }, g); }
-  else { el("circle", { cx: p[0], cy: p[1], r: 8, fill: "#3E8F5E" }, g); el("circle", { cx: p[0] + 3, cy: p[1] - 3, r: 4.5, fill: "#56AE74" }, g); }
-}
-
-function lampPool(x, y, g) { const p = iso(x, y, 10.2); el("ellipse", { cx: p[0], cy: p[1], rx: 44, ry: 24, fill: "url(#lamp)" }, g); }
-
-function sofa(x, y, cor, g) {
-  box(x, y, 30, 12, 6, 10, cor, shade(cor, .7), shade(cor, .6), g);
-  box(x, y, 30, 4, 12, 10, shade(cor, 1.1), shade(cor, .75), shade(cor, .65), g);
-  box(x, y, 4, 12, 9, 10, shade(cor, 1.05), shade(cor, .72), shade(cor, .62), g);
-  box(x + 26, y, 4, 12, 9, 10, shade(cor, 1.05), shade(cor, .72), shade(cor, .62), g);
-}
-
-function drawRoom(t) {
-  const c = cell(t.gx, t.gy);
-  const g = el("g", { class: "room", tabindex: "0", role: "button", "aria-label": `Sala ${t.nome}`, "data-id": t.id });
-  // Base e piso de madeira tingido
-  box(c.x, c.y, U, U, 10, 0, shade(t.cor, .34), shade(t.cor, .22), shade(t.cor, .17), g);
-  for (let k = 10; k < U; k += 10) el("line", { x1: iso(c.x + k, c.y, 10)[0], y1: iso(c.x + k, c.y, 10)[1], x2: iso(c.x + k, c.y + U, 10)[0], y2: iso(c.x + k, c.y + U, 10)[1], stroke: shade(t.cor, .26), "stroke-width": ".7" }, g);
-  // Tapete
-  el("polygon", { points: floorRect(c.x + 22, c.y + 30, c.x + U - 12, c.y + U - 10, 10.1), fill: shade(t.cor, .55), "fill-opacity": ".55" }, g);
-  el("polygon", { points: floorRect(c.x + 26, c.y + 34, c.x + U - 16, c.y + U - 14, 10.15), fill: "none", stroke: shade(t.cor, .85), "stroke-opacity": ".35", "stroke-width": ".8" }, g);
-  // Paredes
-  box(c.x, c.y, U, 4, WALL_H - 10, 10, shade(t.cor, .5), shade(t.cor, .3), shade(t.cor, .26), g);
-  box(c.x, c.y, 4, U, WALL_H - 10, 10, shade(t.cor, .5), shade(t.cor, .3), shade(t.cor, .26), g);
-  // Rodapé luminoso
-  el("polygon", { points: faceY(c.x + 4, c.x + U, c.y + 4.05, 10, 11.5), fill: t.cor, "fill-opacity": ".55" }, g);
-  el("polygon", { points: faceX(c.x + 4.05, c.y + 4, c.y + U, 10, 11.5), fill: t.cor, "fill-opacity": ".55" }, g);
-  windowOnBack(c, c.x + 50, c.x + U - 10, g);
-  poster(t, c, g);
-  lampPool(c.x + U * .5, c.y + U * .5, g);
-  if (t.id === "diretoria") { sofa(c.x + 20, c.y + 6, "#7A5C9E", g); }
-  else bookshelf(c.x + 12, c.y + 4.5, g);
-  plant(c.x + 8, c.y + U - 20, g, t.gx + t.gy > 2);
-  // Borda de vidro na frente
-  el("polygon", { class: "edge", points: pts([iso(c.x + U, c.y, 10), iso(c.x + U, c.y + U, 10), iso(c.x, c.y + U, 10)]), fill: "none", stroke: t.cor, "stroke-opacity": ".75", "stroke-width": "1.6" }, g);
-  el("polygon", { points: pts([iso(c.x + U, c.y, 10), iso(c.x + U, c.y + U, 10), iso(c.x, c.y + U, 10)]), fill: "none", stroke: t.cor, "stroke-opacity": ".18", "stroke-width": "6" }, g);
-  // Mesas
-  const n = t.agentes;
-  const spots = [[0.5, 0.52], [0.36, 0.42], [0.72, 0.66], [0.34, 0.74], [0.74, 0.38]];
-  const order = n === 1 ? [0] : n === 2 ? [1, 2] : [1, 0, 2];
-  seats[t.id] = [];
-  order.forEach((si, i) => {
-    const [fx, fy] = spots[si];
-    const dx = c.x + U * fx - 14, dy = c.y + U * fy - 14;
-    box(dx, dy, 28, 18, 2, 20, "#D9B27A", "#9C7646", "#8A683D", g);
-    box(dx + 1, dy + 1, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
-    box(dx + 25, dy + 1, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
-    box(dx + 1, dy + 15, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
-    box(dx + 25, dy + 15, 2, 2, 10, 10, "#6B5233", "#5A4329", "#4F3B24", g);
-    box(dx + 12, dy + 4, 4, 2, 4, 22, "#1C2540", "#141B30", "#141B30", g);
-    box(dx + 6, dy + 2, 16, 2, 11, 25, "#1C2540", "#141B30", "#141B30", g);
-    el("polygon", { class: "screen", points: pts([iso(dx + 7, dy + 4.05, 26), iso(dx + 21, dy + 4.05, 26), iso(dx + 21, dy + 4.05, 35), iso(dx + 7, dy + 4.05, 35)]), fill: t.cor, "fill-opacity": ".95", style: `animation-delay:${(i * .7).toFixed(1)}s` }, g);
-    box(dx + 8, dy + 9, 11, 4, 1, 22, "#E6E2D6", "#B9B4A6", "#ABA697", g);
-    box(dx + 21, dy + 10, 3, 3, 3, 22, "#F5F0E1", "#CFC8B4", "#C2BBA6", g);
-    box(dx + 9, dy + 27, 10, 3, 14, 10, shade(t.cor, .7), shade(t.cor, .5), shade(t.cor, .45), g);
-    seats[t.id].push({ x: dx + 14, y: dy + 24 });
-  });
-}
-
-function drawLounge() {
-  const c = cell(LOUNGE.gx, LOUNGE.gy);
-  const g = el("g", { "aria-label": "Lounge" });
-  box(c.x, c.y, U, U, 6, 0, "#2A2238", "#1E1829", "#1A1524", g);
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) if ((i + j) % 2) el("polygon", { points: floorRect(c.x + i * U / 6, c.y + j * U / 6, c.x + (i + 1) * U / 6, c.y + (j + 1) * U / 6, 6.05), fill: "#332A44" }, g);
-  lampPool(c.x + U * .55, c.y + U * .5, g);
-  // Balcão de café
-  box(c.x + 6, c.y + 8, 12, 46, 16, 6, "#8C6B3F", "#6B5030", "#5E4629", g);
-  box(c.x + 7, c.y + 12, 9, 10, 12, 22, "#2B2F3A", "#1E222B", "#1A1D25", g);
-  const cp = iso(c.x + 11, c.y + 22.1, 30); el("circle", { cx: cp[0], cy: cp[1], r: 1.6, fill: "#FF6B5A" }, g);
-  box(c.x + 8, c.y + 34, 5, 5, 4, 22, "#F5F0E1", "#CFC8B4", "#C2BBA6", g);
-  box(c.x + 8, c.y + 42, 5, 5, 4, 22, "#E8C547", "#B8992F", "#A88A28", g);
-  // Mesa de sinuca
-  const px = c.x + 44, py = c.y + 24;
-  box(px, py, 50, 28, 12, 6, "#5A3A22", "#3F2817", "#352113", g);
-  el("polygon", { points: floorRect(px + 3, py + 3, px + 47, py + 25, 18.1), fill: "#1F7A4C" }, g);
-  [[14, 10, "#F5F0E1"], [30, 14, "#E8C547"], [33, 11, "#C65B4E"], [36, 16, "#5B8DD6"], [32, 17, "#141414"]].forEach(([u, v, col]) => { const p = iso(px + u, py + v, 19.5); el("circle", { cx: p[0], cy: p[1], r: 1.7, fill: col }, g); });
-  // Sofá e plantas
-  sofa(c.x + 50, c.y + U - 22, "#4E6DAE", g);
-  plant(c.x + U - 14, c.y + 6, g, true);
-  plant(c.x + 24, c.y + U - 16, g, false);
-  const sp = iso(c.x + U * .62, c.y + U * .5, 70);
-  const lb = el("text", { x: sp[0], y: sp[1] - 20, "text-anchor": "middle", class: "brain-t" }, g); lb.textContent = "LOUNGE · CAFÉ";
-}
-
-function drawOffice() {
-  svg.textContent = "";
-  seed = 7;
-  defsAll();
-  // Piso geral com ladrilhos
-  el("polygon", { points: pts([iso(-20, -20), iso(TOTAL + 20, -20), iso(TOTAL + 20, TOTAL + 20), iso(-20, TOTAL + 20)]), fill: "#121A30", stroke: "#24304F" });
-  for (let k = -20; k <= TOTAL + 20; k += 17) {
-    el("line", { x1: iso(k, -20)[0], y1: iso(k, -20)[1], x2: iso(k, TOTAL + 20)[0], y2: iso(k, TOTAL + 20)[1], stroke: "#18213B", "stroke-width": ".8" });
-    el("line", { x1: iso(-20, k)[0], y1: iso(-20, k)[1], x2: iso(TOTAL + 20, k)[0], y2: iso(TOTAL + 20, k)[1], stroke: "#18213B", "stroke-width": ".8" });
-  }
-  const bc = iso(cellCenter(1, 1).x, cellCenter(1, 1).y, 30);
-  const wires = el("g", {});
-  TEAMS.forEach(t => { const cc = cellCenter(t.gx, t.gy), c = iso(cc.x, cc.y, 14); el("path", { d: `M${bc[0]},${bc[1]} Q${(bc[0] + c[0]) / 2},${Math.min(bc[1], c[1]) - 40} ${c[0]},${c[1]}`, class: "wire" }, wires); });
-
-  const items = TEAMS.map(t => ({ t, k: t.gx + t.gy, gx: t.gx }))
-    .concat([{ brain: true, k: 2, gx: 1 }, { lounge: true, k: 1, gx: 0 }])
-    .sort((a, b) => a.k - b.k || b.gx - a.gx);
-  items.forEach(it => { if (it.brain) drawBrain(); else if (it.lounge) drawLounge(); else drawRoom(it.t); });
-  agentLayer = el("g", { id: "agents" });
-  const labelLayer = el("g", {});
-  TEAMS.forEach(t => drawLabel(t, labelLayer));
-  bubbleLayer = el("g", { id: "bubbles" });
-}
-
-function drawBrain() {
-  const cc = cellCenter(1, 1);
-  const g = el("g", { "aria-label": "Cérebro" });
-  const ring = [];
-  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; ring.push(iso(cc.x + Math.cos(a) * U * .42, cc.y + Math.sin(a) * U * .42, 4)); }
-  el("polygon", { points: pts(ring), fill: "#151E38", stroke: "#E8C547", "stroke-opacity": ".45" }, g);
-  const p = iso(cc.x, cc.y, 34);
-  el("ellipse", { cx: p[0], cy: p[1] + 18, rx: 90, ry: 52, fill: "url(#brainGlow)" }, g);
-  const nodes = [];
-  for (let i = 0; i < 26; i++) { const a = i * 2.39996, rr = 6 + Math.sqrt(i) * 7.2; nodes.push([p[0] + Math.cos(a) * rr * 1.35, p[1] + Math.sin(a) * rr * .8]); }
-  nodes.forEach((n, i) => { if (i) el("line", { x1: p[0], y1: p[1], x2: n[0], y2: n[1], stroke: "#E8C547", "stroke-opacity": ".28", "stroke-width": ".8" }, g); });
-  nodes.forEach((n, i) => { if (i) el("circle", { cx: n[0], cy: n[1], r: 2.2, fill: "#F5E7B0" }, g); });
-  el("circle", { class: "brain-core", cx: p[0], cy: p[1], r: 7, fill: "#E8C547" }, g);
-  const t1 = el("text", { x: p[0], y: p[1] - 30, "text-anchor": "middle", class: "brain-t" }, g); t1.textContent = "O CÉREBRO · 97 NOTAS";
-}
-
-function drawLabel(t, layer) {
-  const c = cell(t.gx, t.gy);
-  const p = iso(c.x, c.y, WALL_H + 20);
-  const lg = el("g", { class: "room lbl", "data-id": t.id }, layer);
-  const bg = el("rect", { class: "lbl-bg", height: 26, rx: 13 }, lg);
-  const dot = el("circle", { r: 4, fill: t.cor }, lg);
-  const n = el("text", { class: "lbl-name" }, lg); n.textContent = t.nome;
-  const m = el("text", { class: "lbl-meta", "data-meta": t.id }, lg); m.textContent = metaFor(t.id);
-  t.layoutLabel = () => {
-    const nw = n.getComputedTextLength(), mw = m.getComputedTextLength();
-    const w = 23 + nw + 10 + mw + 11, x = p[0] - w / 2, y = p[1] - 26;
-    bg.setAttribute("x", x); bg.setAttribute("y", y); bg.setAttribute("width", w);
-    dot.setAttribute("cx", x + 13); dot.setAttribute("cy", y + 13);
-    n.setAttribute("x", x + 23); n.setAttribute("y", y + 17.5);
-    m.setAttribute("x", x + 23 + nw + 10); m.setAttribute("y", y + 17);
-  };
-  t.layoutLabel();
-}
-
-/* ---------- Agentes vivos ---------- */
-const SKIN = ["#F3D9B8", "#E2B48C", "#C68E63", "#8D5A3B", "#F0C8A0"];
-const HAIR = ["#2B1D14", "#5A3B22", "#151515", "#A0522D", "#D9B26A", "#3A2A4A"];
+const GREET = ["oi!", "e aí?", "bom dia!", "👋"];
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const agents = [];
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = a => a[Math.floor(Math.random() * a.length)];
-const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 
-function makeSprite(a) {
-  const g = el("g", { class: "agent", "data-team": a.team.id }, agentLayer);
-  const title = el("title", {}, g); title.textContent = `${a.team.nome} · agente ${a.n}`;
-  el("ellipse", { cx: 0, cy: 0, rx: 8, ry: 4, fill: "rgba(0,0,0,.35)" }, g);
-  const inner = el("g", {}, g);
-  const legL = box(-4, -2, 3, 4, 8, 0, "#2A3350", "#1D2440", "#1A2038", inner, isoL);
-  const legR = box(1, -2, 3, 4, 8, 0, "#2A3350", "#1D2440", "#1A2038", inner, isoL);
-  box(-5, -3, 10, 6, 10, 8, a.team.cor, shade(a.team.cor, .72), shade(a.team.cor, .6), inner, isoL);
-  box(-4, -4, 8, 8, 8, 18, a.skin, shade(a.skin, .85), shade(a.skin, .75), inner, isoL);
-  box(-4.5, -4.5, 9, 9, 2.5, 25.5, a.hair, shade(a.hair, .8), shade(a.hair, .7), inner, isoL);
-  a.el = g; a.inner = inner; a.legL = legL; a.legR = legR;
-  g.addEventListener("click", ev => { ev.stopPropagation(); selTeam = a.team.id; renderPanel(); say(a, describe(a), 3.5); });
+/* ---------- Estado da fila ---------- */
+let tasks = [], selTeam = null, filter = "ativas", db = null, sample = null;
+const currentTask = id => tasks.find(t => t.equipe === id && t.status === "fazendo");
+const queuedTask = id => tasks.find(t => t.equipe === id && t.status === "fila");
+function counts(team) { const r = { fila: 0, fazendo: 0, feito: 0 }; tasks.forEach(t => { if ((!team || t.equipe === team) && r[t.status] !== undefined) r[t.status]++; }); return r; }
+
+/* ---------- Cena 3D ---------- */
+const office = document.getElementById("office"), overlay = document.getElementById("overlay");
+const CELL = 10, STEP = 12.4;
+const cellPos = (gx, gy) => ({ x: (gx - 1) * STEP, z: (gy - 1) * STEP });
+const LOUNGE = { gx: 0, gy: 1 }, BRAIN = { gx: 1, gy: 1 };
+let scene, camera, renderer, controls, raycaster, pointer, loungePos, brainCore;
+const agents = [], tags = {}, clickables = [], seats = {}, mats = {};
+const M = (c, o = {}) => { const k = c + JSON.stringify(o); return mats[k] || (mats[k] = new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: .82, metalness: 0 }, o))); };
+function B(w, h, d, color, x, y, z, parent, o) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), M(color, o)); m.position.set(x, y + h / 2, z); m.castShadow = true; m.receiveShadow = true; (parent || scene).add(m); return m; }
+function Cyl(rt, rb, h, color, x, y, z, parent, seg = 16) { const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), M(color)); m.position.set(x, y + h / 2, z); m.castShadow = true; m.receiveShadow = true; (parent || scene).add(m); return m; }
+const mix = (a, b, t) => "#" + new THREE.Color(a).lerp(new THREE.Color(b), t).getHexString();
+
+function chair(x, z, rot, g) {
+  const c = new THREE.Group(); c.position.set(x, 0, z); c.rotation.y = rot; g.add(c);
+  Cyl(.04, .04, .32, "#3A3A44", 0, .05, 0, c, 8);
+  for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; const leg = B(.34, .04, .06, "#3A3A44", Math.cos(a) * .16, .03, -Math.sin(a) * .16, c); leg.rotation.y = a; }
+  B(.56, .1, .52, "#8A6FB8", 0, .37, 0, c);
+  B(.56, .5, .1, "#7C62A8", 0, .47, .26, c);
+}
+function desk(x, z, team, g) {
+  B(1.7, .07, .85, "#C99B62", x, .72, z, g);
+  B(1.62, .5, .05, "#A97E4C", x, .22, z - .38, g);
+  [[-.78, -.36], [.78, -.36], [-.78, .36], [.78, .36]].forEach(([a, b]) => B(.07, .72, .07, "#2C2C34", x + a, 0, z + b, g));
+  B(.1, .22, .08, "#2B2F3A", x, .79, z - .2, g);
+  B(.74, .44, .05, "#2B2F3A", x, 1.0, z - .22, g);
+  const scr = B(.66, .36, .01, team.cor, x, 1.04, z - .193, g, { emissive: team.cor, emissiveIntensity: .55 }); scr.castShadow = false;
+  B(.5, .02, .16, "#E6E2D6", x - .05, .79, z + .08, g);
+  Cyl(.05, .05, .1, "#F5F0E1", x + .55, .79, z + .05, g, 10);
+  chair(x, z + .78, 0, g);
+}
+function plant(x, z, g, big) {
+  Cyl(.22, .17, .4, "#E9E4DA", x, 0, z, g, 14);
+  const n = big ? 7 : 5;
+  for (let i = 0; i < n; i++) { const a = i / n * 6.28; const l = B(.08, big ? 1.2 : .8, .04, i % 2 ? "#3FA796" : "#56C2AE", x + Math.cos(a) * .08, .35, z + Math.sin(a) * .08, g); l.rotation.z = Math.cos(a) * .35; l.rotation.x = Math.sin(a) * .35; }
+}
+function sofa(x, z, rot, color, g) {
+  const s = new THREE.Group(); s.position.set(x, 0, z); s.rotation.y = rot; g.add(s);
+  B(2, .42, .9, color, 0, .08, 0, s); B(2, .5, .25, color, 0, .5, -.33, s); B(.25, .35, .9, color, -.88, .5, 0, s); B(.25, .35, .9, color, .88, .5, 0, s);
+  [[-.9, -.38], [.9, -.38], [-.9, .38], [.9, .38]].forEach(([a, b]) => B(.08, .08, .08, "#2C2C34", a, 0, b, s));
+}
+function bookshelf(x, z, g) {
+  const s = new THREE.Group(); s.position.set(x, 0, z); g.add(s);
+  B(1.6, 1.8, .4, "#8A6440", 0, 0, 0, s);
+  const cols = ["#C65B4E", "#E8C547", "#5B8DD6", "#2FB57A", "#9A6BF0", "#EE8B35", "#F2EEE3"];
+  for (let r = 0; r < 3; r++) { B(1.5, .04, .36, "#6E4F31", 0, .25 + r * .55, .03, s); let bx = -.68; while (bx < .62) { const w = rnd(.06, .12); B(w, rnd(.28, .42), .28, pick(cols), bx + w / 2, .29 + r * .55, .05, s); bx += w + .02; } }
+}
+function roundTable(x, z, g) { Cyl(.6, .6, .06, "#C99B62", x, .7, z, g, 24); Cyl(.06, .06, .7, "#2C2C34", x, 0, z, g, 8); Cyl(.3, .3, .03, "#2C2C34", x, 0, z, g, 16); }
+
+function wall(x, z, len, alongX, g, doorAt = .5) {
+  const H = 2.3, T = .22, door = 1.7;
+  const a = len * doorAt - door / 2, b = len * doorAt + door / 2;
+  const seg = (s0, s1) => { const L = s1 - s0, c = s0 + L / 2 - len / 2; if (alongX) { B(L, H, T, "#7D808B", x + c, 0, z, g); B(L, .05, T + .02, "#55575F", x + c, H, z, g); } else { B(T, H, L, "#7D808B", x, 0, z + c, g); B(T + .02, .05, L, "#55575F", x, H, z + c, g); } };
+  seg(0, a); seg(b, len);
+  const mid = a + door / 2 - len / 2;
+  if (alongX) B(door, .25, T, "#8E9099", x + mid, H - .25, z, g); else B(T, .25, door, "#8E9099", x, H - .25, z + mid, g);
 }
 
-function describe(a) {
-  const t = currentTask(a.team.id);
-  if (t) return "Fazendo: " + t.titulo;
-  const q = queuedTask(a.team.id);
-  if (q) return "Na fila: " + q.titulo;
-  return "Livre: sem tarefa na fila";
+function zone(t) {
+  const p = cellPos(t.gx, t.gy), g = new THREE.Group(); g.position.set(p.x, 0, p.z); scene.add(g);
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(CELL, .06, CELL), M(mix("#E3D8C6", t.cor, .2)));
+  floor.position.y = .03; floor.receiveShadow = true; floor.userData.team = t.id; g.add(floor); clickables.push(floor);
+  const rug = new THREE.Mesh(new THREE.BoxGeometry(6.2, .02, 5.4), M(mix("#F4EEE4", t.cor, .45)));
+  rug.position.set(.6, .07, .8); rug.receiveShadow = true; rug.userData.team = t.id; g.add(rug); clickables.push(rug);
+  wall(0, -CELL / 2, CELL, true, g);
+  wall(-CELL / 2, 0, CELL, false, g);
+  B(CELL, .12, .24, t.cor, 0, 2.35, -CELL / 2, g); B(.24, .12, CELL, t.cor, -CELL / 2, 2.35, 0, g);
+  if (t.id === "diretoria") { sofa(-2.6, -4.1, 0, "#7C62A8", g); roundTable(2.8, -2.8, g); chair(2.8, -2, 0, g); chair(2, -2.8, -Math.PI / 2, g); }
+  else bookshelf(-3.2, -4.6, g);
+  plant(4.2, -4.2, g, true); plant(-4.3, 4.2, g, false);
+  const spots = { 1: [[.6, .6]], 2: [[-1.4, -.6], [2.2, 1.8]], 3: [[-1.5, -1.2], [2.2, -1.2], [.4, 2.1]] }[t.agentes];
+  seats[t.id] = spots.map(([x, z]) => { desk(x, z, t, g); return { x: p.x + x, z: p.z + z + .78 }; });
 }
 
-function spawnAgents() {
-  agentLayer.textContent = "";
-  agents.length = 0;
-  TEAMS.forEach(t => seats[t.id].forEach((s, i) => {
-    const a = { team: t, n: i + 1, seat: s, x: s.x, y: s.y, state: "sit", timer: rnd(1, 8), path: [], skin: pick(SKIN), hair: pick(HAIR), face: 1, phase: Math.random() * 6, bubble: null, cool: 0 };
-    makeSprite(a); agents.push(a);
-  }));
+function lounge() {
+  const p = cellPos(LOUNGE.gx, LOUNGE.gy), g = new THREE.Group(); g.position.set(p.x, 0, p.z); scene.add(g);
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(CELL, .06, CELL), M("#E2D7C6")); floor.position.y = .03; floor.receiveShadow = true; g.add(floor);
+  for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) if ((i + j) % 2) { const tl = new THREE.Mesh(new THREE.BoxGeometry(2, .01, 2), M("#D6C9B4")); tl.position.set(-4 + i * 2, .065, -4 + j * 2); tl.receiveShadow = true; g.add(tl); }
+  B(.8, 1, 3, "#8A6440", -4.2, 0, -2, g); B(.86, .06, 3.06, "#EDE7DC", -4.2, 1, -2, g);
+  B(.5, .6, .45, "#2B2F3A", -4.2, 1.06, -2.8, g); B(.12, .12, .02, "#FF6B5A", -4.0, 1.4, -2.57, g, { emissive: "#FF6B5A", emissiveIntensity: .8 });
+  Cyl(.07, .06, .14, "#F5F0E1", -4.2, 1.06, -1.6, g, 10); Cyl(.07, .06, .14, "#E8C547", -4.2, 1.06, -1.2, g, 10);
+  B(3.2, .7, 1.8, "#5A3A22", 1.2, 0, -1.6, g); B(3.0, .04, 1.6, "#1F7A4C", 1.2, .7, -1.6, g);
+  [["#F5F0E1", .2, -1.6], ["#E8C547", 1.6, -1.4], ["#C65B4E", 1.8, -1.8], ["#3D8EF0", 2.0, -1.5], ["#141414", 1.7, -1.6]].forEach(([c, x, z]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(.07, 12, 10), M(c)); s.position.set(x, .8, z); s.castShadow = true; g.add(s); });
+  sofa(1, 3.2, Math.PI, "#7C62A8", g);
+  roundTable(-2.2, 2.4, g); chair(-2.2, 3.2, 0, g); chair(-3.0, 2.4, -Math.PI / 2, g);
+  plant(4.2, 4.3, g, true); plant(4.2, -4.3, g, false);
+  return { x: p.x, z: p.z };
+}
+
+function brain() {
+  const p = cellPos(BRAIN.gx, BRAIN.gy), g = new THREE.Group(); g.position.set(p.x, 0, p.z); scene.add(g);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 3.8, .12, 48), M("#2A2F45")); base.position.y = .06; base.receiveShadow = true; g.add(base);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(3.4, .05, 8, 64), M("#E8C547", { emissive: "#E8C547", emissiveIntensity: .7 })); ring.rotation.x = Math.PI / 2; ring.position.y = .14; g.add(ring);
+  Cyl(.5, .7, .9, "#3A4060", 0, .12, 0, g, 24);
+  brainCore = new THREE.Group(); brainCore.position.set(0, 2.2, 0); g.add(brainCore);
+  brainCore.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshStandardMaterial({ color: "#E8C547", emissive: "#E8C547", emissiveIntensity: .9, wireframe: true })));
+  brainCore.add(new THREE.Mesh(new THREE.SphereGeometry(.35, 20, 16), M("#FFE38A", { emissive: "#F5C842", emissiveIntensity: 1.2 })));
+  const geo = new THREE.BufferGeometry(), arr = [];
+  for (let i = 0; i < 97; i++) { const u = Math.random() * 2 - 1, th = Math.random() * 6.28, r = 1.2 + Math.random() * .5; arr.push(Math.sqrt(1 - u * u) * Math.cos(th) * r, u * r, Math.sqrt(1 - u * u) * Math.sin(th) * r); }
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(arr, 3));
+  brainCore.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: "#B8901C", size: .09 })));
+  const light = new THREE.PointLight("#FFD866", .9, 9); light.position.set(0, 2.2, 0); g.add(light);
+}
+
+/* ---------- Agentes ---------- */
+const SKIN = ["#F3D3B0", "#E2B48C", "#C68E63", "#8D5A3B", "#F0C8A0"];
+const HAIR = ["#2B1D14", "#5A3B22", "#151515", "#A0522D", "#D9B26A", "#3A2A4A"];
+function makeAgent(team, n, seat) {
+  const g = new THREE.Group(); scene.add(g);
+  const skin = pick(SKIN), hair = pick(HAIR);
+  const legs = [-.13, .13].map(x => { const piv = new THREE.Group(); piv.position.set(x, .55, 0); g.add(piv); B(.18, .55, .2, "#2E3448", 0, -.55, 0, piv); return piv; });
+  B(.52, .58, .3, team.cor, 0, .55, 0, g);
+  const arms = [-.34, .34].map(x => { const piv = new THREE.Group(); piv.position.set(x, 1.08, 0); g.add(piv); B(.14, .5, .16, team.cor, 0, -.5, 0, piv); B(.13, .1, .14, skin, 0, -.6, 0, piv); return piv; });
+  B(.44, .42, .4, skin, 0, 1.13, 0, g);
+  B(.46, .12, .42, hair, 0, 1.53, 0, g); B(.46, .22, .08, hair, 0, 1.33, -.19, g);
+  B(.06, .06, .01, "#1C1C22", -.1, 1.36, .2, g); B(.06, .06, .01, "#1C1C22", .1, 1.36, .2, g);
+  const a = { team, n, seat, g, legs, arms, x: seat.x, z: seat.z, state: "sit", timer: rnd(1, 7), path: [], phase: Math.random() * 6, rot: Math.PI, bubble: null, bubbleTtl: 0, cool: 0, jump: 0 };
+  g.traverse(o => { if (o.isMesh) { o.userData.agentObj = a; clickables.push(o); } });
+  agents.push(a);
 }
 
 function routeTo(a, target) {
-  const from = cellOf(a), to = cellOf(target);
-  const path = [];
-  if (from.gx !== to.gx || from.gy !== to.gy) {
-    path.push(jitter(cellCenter(from.gx, from.gy)));
-    if (from.gx !== to.gx && from.gy !== to.gy) path.push(jitter(cellCenter(to.gx, from.gy)));
-    path.push(jitter(cellCenter(to.gx, to.gy)));
-  }
-  path.push(target);
-  a.path = path; a.state = "walk";
+  const cellOf = p => ({ gx: Math.max(0, Math.min(2, Math.round(p.x / STEP) + 1)), gy: Math.max(0, Math.min(2, Math.round(p.z / STEP) + 1)) });
+  const from = cellOf(a), to = cellOf(target), P = [];
+  const cc = (gx, gy) => { const p = cellPos(gx, gy); return { x: p.x + rnd(-.4, .4), z: p.z + rnd(-.4, .4) }; };
+  if (from.gx !== to.gx || from.gy !== to.gy) { P.push(cc(from.gx, from.gy)); if (from.gx !== to.gx && from.gy !== to.gy) P.push(cc(to.gx, from.gy)); P.push(cc(to.gx, to.gy)); }
+  P.push(target); a.path = P; a.state = "walk";
 }
-const jitter = p => ({ x: p.x + rnd(-14, 14), y: p.y + rnd(-14, 14) });
-function cellOf(p) { const k = U + GAP; return { gx: Math.max(0, Math.min(2, Math.floor((p.x + GAP / 2) / k))), gy: Math.max(0, Math.min(2, Math.floor((p.y + GAP / 2) / k))) }; }
-
+function describe(a) { const t = currentTask(a.team.id); if (t) return "Fazendo: " + t.titulo; const q = queuedTask(a.team.id); if (q) return "Na fila: " + q.titulo; return "Livre: sem tarefa na fila"; }
 function decide(a) {
-  const r = Math.random();
   const t = currentTask(a.team.id);
-  if (t) { a.state = "sit"; a.timer = rnd(6, 12); if (Math.random() < 0.35) say(a, "Fazendo: " + t.titulo, 3.2); return; }
-  if (r < 0.55) { a.state = "sit"; a.timer = rnd(5, 11); return; }
-  if (r < 0.8) { const c = cell(a.team.gx, a.team.gy); a.goal = "wander"; routeTo(a, { x: c.x + rnd(24, U - 16), y: c.y + rnd(40, U - 12) }); return; }
-  const lc = cell(LOUNGE.gx, LOUNGE.gy);
-  a.goal = "cafe"; routeTo(a, { x: lc.x + rnd(24, 40), y: lc.y + rnd(16, 52) });
+  if (t) { a.state = "sit"; a.timer = rnd(6, 12); if (Math.random() < .35) say(a, "Fazendo: " + t.titulo, 3.4); return; }
+  const r = Math.random();
+  if (r < .55) { a.state = "sit"; a.timer = rnd(5, 11); return; }
+  const p = cellPos(a.team.gx, a.team.gy);
+  if (r < .8) { a.goal = "wander"; routeTo(a, { x: p.x + rnd(-3, 3.5), z: p.z + rnd(-2, 3.5) }); return; }
+  a.goal = "cafe"; routeTo(a, { x: loungePos.x - 3.4 + rnd(0, .4), z: loungePos.z - 2 + rnd(-1, 1) });
 }
-
 function arrive(a) {
-  if (a.goal === "home") { a.state = "sit"; a.timer = rnd(6, 12); a.x = a.seat.x; a.y = a.seat.y; a.goal = null; if (a.afterSay) { say(a, a.afterSay, 3.2); a.afterSay = null; } return; }
-  if (a.goal === "cafe") { a.state = "pause"; a.timer = rnd(3, 5); a.face = -1; say(a, "☕", 2.5); a.after = "home"; return; }
-  if (a.goal === "brain") { a.state = "pause"; a.timer = 3.2; a.thinking = true; say(a, "Lendo o cérebro: " + (a.brainFor || ""), 3); a.after = "home"; a.afterSay = a.brainFor ? "Começando: " + a.brainFor : null; return; }
+  if (a.goal === "home") { a.state = "sit"; a.timer = rnd(6, 12); a.x = a.seat.x; a.z = a.seat.z; a.goal = null; if (a.afterSay) { say(a, a.afterSay, 3.4); a.afterSay = null; } return; }
+  a.state = "pause";
+  if (a.goal === "cafe") { a.timer = rnd(3, 5); a.rot = -Math.PI / 2; say(a, "☕", 2.4); return; }
+  if (a.goal === "brain") { const b = cellPos(1, 1); a.timer = 3.2; a.rot = Math.atan2(b.x - a.x, b.z - a.z); say(a, "Lendo o cérebro: " + (a.brainFor || ""), 3); a.afterSay = a.brainFor ? "Começando: " + a.brainFor : null; return; }
   if (a.goal === "deliver") {
-    const tgt = agents.filter(b => b.team.id === a.deliverTeam).sort((p, q) => dist(p, a) - dist(q, a))[0];
-    a.state = "pause"; a.timer = 3.8; a.after = "home";
-    say(a, "Nova tarefa: " + a.deliverTitle, 3.2);
-    if (tgt) setTimeout(() => { say(tgt, "Pego!", 2.2); tgt.jump = 0.5; }, 1600);
+    a.timer = 3.8; say(a, "Nova tarefa: " + a.deliverTitle, 3.2);
+    const tgt = agents.filter(b => b.team.id === a.deliverTeam).sort((p, q) => Math.hypot(p.x - a.x, p.z - a.z) - Math.hypot(q.x - a.x, q.z - a.z))[0];
+    if (tgt) setTimeout(() => { say(tgt, "Pego!", 2.2); tgt.jump = .5; }, 1500);
     return;
   }
-  a.state = "pause"; a.timer = rnd(1.5, 3.5); a.after = "home";
+  a.timer = rnd(1.5, 3);
 }
-
-function goHome(a) { a.goal = "home"; a.thinking = false; routeTo(a, a.seat); }
-
+const goHome = a => { a.goal = "home"; routeTo(a, a.seat); };
 function say(a, text, secs) {
   if (!text) return;
-  if (a.bubble) a.bubble.g.remove();
-  const g = el("g", { class: "bubble" }, bubbleLayer);
-  const s = text.length > 42 ? text.slice(0, 40) + "…" : text;
-  const tx = el("text", { x: 0, y: 0, class: "bubble-t", "text-anchor": "middle" }, g); tx.textContent = s;
-  const w = Math.max(28, tx.getComputedTextLength() + 16);
-  const r = el("rect", { x: -w / 2, y: -15, width: w, height: 21, rx: 10, class: "bubble-bg" }, g);
-  el("path", { d: "M-4,6 L0,11 L4,6 Z", class: "bubble-bg" }, g);
-  g.insertBefore(r, tx);
-  a.bubble = { g, ttl: secs };
+  if (!a.bubble) { a.bubble = document.createElement("div"); a.bubble.className = "bubble"; overlay.appendChild(a.bubble); }
+  a.bubble.textContent = text; a.bubble.hidden = false; a.bubbleTtl = secs;
 }
-
 function step(dt) {
   for (const a of agents) {
-    a.phase += dt;
-    if (a.cool > 0) a.cool -= dt;
+    a.phase += dt; if (a.cool > 0) a.cool -= dt; if (a.jump > 0) a.jump -= dt;
     if (a.state === "sit") { a.timer -= dt; if (a.timer <= 0 && !REDUCED) decide(a); }
-    else if (a.state === "pause") { a.timer -= dt; if (a.timer <= 0) { if (a.after === "home") goHome(a); else a.state = "sit"; } }
+    else if (a.state === "pause") { a.timer -= dt; if (a.timer <= 0) goHome(a); }
     else if (a.state === "walk") {
-      const target = a.path[0];
-      const dx = target.x - a.x, dy = target.y - a.y, d = Math.hypot(dx, dy);
-      const sp = 52 * dt;
-      if (d <= sp) { a.x = target.x; a.y = target.y; a.path.shift(); if (!a.path.length) arrive(a); }
-      else { a.x += dx / d * sp; a.y += dy / d * sp; const sdx = (dx - dy); if (Math.abs(sdx) > 0.5) a.face = sdx < 0 ? -1 : 1; }
+      const t = a.path[0], dx = t.x - a.x, dz = t.z - a.z, d = Math.hypot(dx, dz), sp = 2.4 * dt;
+      if (d <= sp) { a.x = t.x; a.z = t.z; a.path.shift(); if (!a.path.length) arrive(a); }
+      else { a.x += dx / d * sp; a.z += dz / d * sp; a.rot = Math.atan2(dx, dz); }
     }
-    if (a.jump > 0) a.jump -= dt;
-    if (a.bubble) { a.bubble.ttl -= dt; if (a.bubble.ttl <= 0) { a.bubble.g.remove(); a.bubble = null; } }
+    if (a.bubble && a.bubbleTtl > 0) { a.bubbleTtl -= dt; if (a.bubbleTtl <= 0) a.bubble.hidden = true; }
   }
-  // Encontros no corredor
   for (let i = 0; i < agents.length; i++) for (let j = i + 1; j < agents.length; j++) {
     const a = agents[i], b = agents[j];
-    if (a.state === "walk" && b.state === "walk" && a.cool <= 0 && b.cool <= 0 && dist(a, b) < 16) {
-      a.cool = b.cool = 14;
-      say(a, pick(GREET), 1.8); setTimeout(() => say(b, pick(GREET), 1.6), 600);
-    }
+    if (a.state === "walk" && b.state === "walk" && a.cool <= 0 && b.cool <= 0 && Math.hypot(a.x - b.x, a.z - b.z) < .9) { a.cool = b.cool = 14; say(a, pick(GREET), 1.8); setTimeout(() => say(b, pick(GREET), 1.6), 600); }
   }
 }
 
-function render() {
-  const sorted = agents.slice().sort((p, q) => (p.x + p.y) - (q.x + q.y));
-  sorted.forEach(a => {
-    const [sx, sy] = iso(a.x, a.y, 10);
-    const walking = a.state === "walk";
-    const bob = walking ? Math.abs(Math.sin(a.phase * 10)) * 1.6 : (a.state === "sit" ? Math.sin(a.phase * 2.2) * 0.6 : 0);
-    const hop = a.jump > 0 ? Math.sin((0.5 - a.jump) / 0.5 * Math.PI) * 8 : 0;
-    a.el.setAttribute("transform", `translate(${sx.toFixed(1)},${(sy - bob - hop).toFixed(1)})`);
-    a.inner.setAttribute("transform", `scale(${a.face},1)`);
-    const sw = walking ? Math.sin(a.phase * 10) * 1.8 : 0;
-    a.legL.setAttribute("transform", `translate(0,${sw.toFixed(1)})`);
-    a.legR.setAttribute("transform", `translate(0,${(-sw).toFixed(1)})`);
-    a.el.classList.toggle("thinking", !!a.thinking);
-    agentLayer.appendChild(a.el);
-    if (a.bubble) a.bubble.g.setAttribute("transform", `translate(${sx.toFixed(1)},${(sy - bob - hop - 40).toFixed(1)})`);
+const v3 = new THREE.Vector3();
+function project(x, y, z) { v3.set(x, y, z).project(camera); return { x: (v3.x + 1) / 2 * office.clientWidth, y: (1 - v3.y) / 2 * office.clientHeight, vis: v3.z < 1 }; }
+function pose(a) {
+  const sitting = a.state === "sit", walking = a.state === "walk";
+  const sw = walking ? Math.sin(a.phase * 9) * .7 : 0;
+  a.legs[0].rotation.x = sitting ? -Math.PI / 2 : sw; a.legs[1].rotation.x = sitting ? -Math.PI / 2 : -sw;
+  a.arms[0].rotation.x = sitting ? -.9 + Math.sin(a.phase * 14) * .06 : -sw * .8;
+  a.arms[1].rotation.x = sitting ? -.9 + Math.cos(a.phase * 13) * .06 : sw * .8;
+  const hop = a.jump > 0 ? Math.sin((.5 - a.jump) / .5 * Math.PI) * .45 : 0;
+  a.g.position.set(a.x, (sitting ? -.05 : 0) + hop + (walking ? Math.abs(Math.sin(a.phase * 9)) * .05 : 0), a.z);
+  const target = sitting ? Math.PI : a.rot;
+  let d = target - a.g.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); a.g.rotation.y += d * .2;
+  if (a.bubble && !a.bubble.hidden) { const p = project(a.x, 2.1 + hop, a.z); a.bubble.style.left = p.x + "px"; a.bubble.style.top = p.y + "px"; a.bubble.style.visibility = p.vis ? "visible" : "hidden"; }
+}
+function placeTags() {
+  TEAMS.forEach(t => { const p = cellPos(t.gx, t.gy), q = project(p.x - 2.5, 2.9, p.z - CELL / 2); tags[t.id].style.left = q.x + "px"; tags[t.id].style.top = q.y + "px"; });
+  const b = cellPos(1, 1), q = project(b.x, 3.9, b.z); tags.brain.style.left = q.x + "px"; tags.brain.style.top = q.y + "px";
+  const l = cellPos(0, 1), r = project(l.x, 2.4, l.z - 4); tags.lounge.style.left = r.x + "px"; tags.lounge.style.top = r.y + "px";
+}
+function makeTags() {
+  TEAMS.forEach(t => {
+    const d = document.createElement("div"); d.className = "tag"; d.dataset.id = t.id;
+    const n = document.createElement("span"); n.textContent = t.nome;
+    const dot = document.createElement("span"); dot.className = "d"; dot.style.background = t.cor;
+    const c = document.createElement("span"); c.className = "n"; c.dataset.meta = t.id;
+    d.append(n, dot, c); overlay.appendChild(d); tags[t.id] = d;
+    d.addEventListener("click", () => { selTeam = selTeam === t.id ? null : t.id; renderPanel(); });
   });
+  const b = document.createElement("div"); b.className = "tag brain"; b.textContent = "O Cérebro · 97 notas"; overlay.appendChild(b); tags.brain = b;
+  const l = document.createElement("div"); l.className = "tag"; l.textContent = "Lounge ☕"; overlay.appendChild(l); tags.lounge = l;
+}
+
+function initScene() {
+  if (!window.THREE || !THREE.OrbitControls) { const f = document.createElement("div"); f.className = "fallback"; f.textContent = "Não foi possível carregar o 3D. A fila ao lado continua funcionando."; office.appendChild(f); return false; }
+  scene = new THREE.Scene();
+  try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+  catch { const f = document.createElement("div"); f.className = "fallback"; f.textContent = "Este navegador não liberou o 3D (WebGL). A fila ao lado continua funcionando."; office.appendChild(f); return false; }
+  renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  office.insertBefore(renderer.domElement, overlay);
+  camera = new THREE.PerspectiveCamera(32, 1, .1, 400);
+  camera.position.set(19, 22, 25);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(-1, 0, 0); controls.enableDamping = true; controls.minDistance = 12; controls.maxDistance = 85; controls.maxPolarAngle = 1.25;
+  scene.add(new THREE.HemisphereLight("#FFFFFF", "#8C8274", .42));
+  const sun = new THREE.DirectionalLight("#FFF1DC", .9); sun.position.set(18, 30, 12); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -26, right: 26, top: 26, bottom: -26, near: 1, far: 80 }); sun.shadow.bias = -.0006;
+  scene.add(sun);
+  const ground = new THREE.Mesh(new THREE.BoxGeometry(STEP * 3 + 2, .2, STEP * 3 + 2), M("#CFC6B8")); ground.position.y = -.1; ground.receiveShadow = true; scene.add(ground);
+  TEAMS.forEach(zone); loungePos = lounge(); brain();
+  TEAMS.forEach(t => seats[t.id].forEach((s, i) => makeAgent(t, i + 1, s)));
+  makeTags();
+  raycaster = new THREE.Raycaster(); pointer = new THREE.Vector2();
+  let down = null;
+  renderer.domElement.addEventListener("pointerdown", e => down = [e.clientX, e.clientY]);
+  renderer.domElement.addEventListener("pointerup", e => {
+    if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+    const r = renderer.domElement.getBoundingClientRect();
+    pointer.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+    raycaster.setFromCamera(pointer, camera);
+    const hit = raycaster.intersectObjects(clickables, false)[0];
+    if (!hit) return;
+    const a = hit.object.userData.agentObj;
+    if (a) { selTeam = a.team.id; renderPanel(); say(a, describe(a), 3.6); }
+    else if (hit.object.userData.team) { selTeam = selTeam === hit.object.userData.team ? null : hit.object.userData.team; renderPanel(); }
+  });
+  const resize = () => { const w = office.clientWidth, h = office.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+  new ResizeObserver(resize).observe(office); resize();
+  return true;
 }
 
 let last = performance.now();
 function loop(now) {
-  const dt = Math.min(0.05, (now - last) / 1000); last = now;
-  if (!document.hidden) { step(dt); render(); }
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (!document.hidden) {
+    step(dt); agents.forEach(pose);
+    if (brainCore && !REDUCED) { brainCore.rotation.y += dt * .4; brainCore.position.y = 2.2 + Math.sin(now / 900) * .1; }
+    controls.update(); renderer.render(scene, camera); placeTags();
+  }
   requestAnimationFrame(loop);
 }
 
-function currentTask(teamId) { return tasks.find(t => t.equipe === teamId && t.status === "fazendo"); }
-function queuedTask(teamId) { return tasks.find(t => t.equipe === teamId && t.status === "fila"); }
-
 function onTaskEvent(kind, t) {
-  if (REDUCED) return;
-  const team = byId[t.equipe]; if (!team) return;
+  if (REDUCED || !agents.length || !byId[t.equipe]) return;
   if (kind === "nova") {
     const courier = agents.find(a => a.team.id === "diretoria");
-    if (courier && t.equipe !== "diretoria") {
-      if (courier.bubble) { courier.bubble.g.remove(); courier.bubble = null; }
-      const s = pick(seats[t.equipe]);
-      courier.goal = "deliver"; courier.deliverTeam = t.equipe; courier.deliverTitle = t.titulo;
-      routeTo(courier, { x: s.x + 16, y: s.y + 4 });
-    } else { const a = pick(agents.filter(x => x.team.id === t.equipe)); say(a, "Anotado: " + t.titulo, 3); }
-  } else {
-    const a = agents.filter(x => x.team.id === t.equipe).sort((p, q) => (p.state === "sit" ? 0 : 1) - (q.state === "sit" ? 0 : 1))[0];
-    if (!a) return;
-    if (kind === "fazendo") {
-      const bc = cellCenter(1, 1), ang = rnd(0, Math.PI * 2);
-      if (a.bubble) { a.bubble.g.remove(); a.bubble = null; }
-      a.goal = "brain"; a.brainFor = t.titulo; routeTo(a, { x: bc.x + Math.cos(ang) * 30, y: bc.y + Math.sin(ang) * 30 });
-    }
-    if (kind === "feito") { say(a, "Feito ✓ " + (t.resultado || t.titulo), 3.6); a.jump = 0.5; agents.filter(x => x.team.id === t.equipe && x !== a).forEach(x => x.jump = 0.5); }
+    if (courier && t.equipe !== "diretoria") { const s = pick(seats[t.equipe]); courier.goal = "deliver"; courier.deliverTeam = t.equipe; courier.deliverTitle = t.titulo; routeTo(courier, { x: s.x + 1, z: s.z + .3 }); }
+    else { const a = pick(agents.filter(x => x.team.id === t.equipe)); say(a, "Anotado: " + t.titulo, 3); }
+    return;
   }
+  const a = agents.filter(x => x.team.id === t.equipe).sort((p, q) => (p.state === "sit" ? 0 : 1) - (q.state === "sit" ? 0 : 1))[0];
+  if (!a) return;
+  if (kind === "fazendo") { const b = cellPos(1, 1), ang = rnd(0, 6.28); a.goal = "brain"; a.brainFor = t.titulo; routeTo(a, { x: b.x + Math.cos(ang) * 2.6, z: b.z + Math.sin(ang) * 2.6 }); }
+  if (kind === "feito") { say(a, "Feito ✓ " + (t.resultado || t.titulo), 3.6); agents.filter(x => x.team.id === t.equipe).forEach(x => x.jump = .5); }
 }
 
-/* ---------- Estado ---------- */
-let tasks = [];
-let selTeam = null;
-let filter = "ativas";
-let db = null;
-
-function counts(team) {
-  const r = { fila: 0, fazendo: 0, feito: 0 };
-  tasks.forEach(t => { if ((!team || t.equipe === team) && r[t.status] !== undefined) r[t.status]++; });
-  return r;
-}
-function metaFor(id) { const c = counts(id); return c.fila + c.fazendo ? `${c.fila + c.fazendo} ATIVAS` : `${byId[id].agentes} AG`; }
-
+/* ---------- Painel ---------- */
 function renderCounts() {
   const c = counts(selTeam);
   for (const k of ["fila", "fazendo", "feito"]) document.getElementById("c-" + k).textContent = c[k];
-  svg.querySelectorAll("[data-meta]").forEach(n => { const id = n.getAttribute("data-meta"); n.textContent = metaFor(id); byId[id].layoutLabel?.(); });
+  document.querySelectorAll("[data-meta]").forEach(n => { const k = counts(n.dataset.meta); n.textContent = k.fila + k.fazendo ? `${k.fila + k.fazendo} ativas` : ""; });
+  Object.entries(tags).forEach(([id, d]) => d.classList.toggle("sel", id === selTeam));
 }
-
 function renderPanel() {
   const title = document.getElementById("p-title"), card = document.getElementById("p-card"), clear = document.getElementById("p-clear");
-  svg.querySelectorAll(".room").forEach(r => r.classList.toggle("sel", r.dataset.id === selTeam));
   card.innerHTML = "";
   if (!selTeam) {
     title.textContent = "Todas as equipes"; clear.hidden = true;
-    const p = document.createElement("p");
-    p.textContent = "Só tarefas reais da fila aparecem aqui. Os agentes do Claude Code atualizam a fila quando começam e terminam; agente sem tarefa fica livre.";
-    card.appendChild(p);
+    const p = document.createElement("p"); p.textContent = "Só tarefas reais da fila aparecem aqui. Os agentes do Claude Code atualizam a fila quando começam e terminam; agente sem tarefa fica livre."; card.appendChild(p);
   } else {
-    const t = byId[selTeam];
-    title.textContent = "Equipe " + t.nome; clear.hidden = false;
+    const t = byId[selTeam]; title.textContent = "Equipe " + t.nome; clear.hidden = false;
     const p = document.createElement("p"); p.textContent = t.desc; card.appendChild(p);
-    const tl = document.createElement("div"); tl.className = "tools";
-    t.tools.forEach(n => { const s = document.createElement("span"); s.className = "tool"; s.textContent = n; tl.appendChild(s); });
-    card.appendChild(tl);
+    const tl = document.createElement("div"); tl.className = "tools"; t.tools.forEach(n => { const s = document.createElement("span"); s.className = "tool"; s.textContent = n; tl.appendChild(s); }); card.appendChild(tl);
     const a = document.createElement("p"); a.className = "path"; a.textContent = `.claude/agents/${t.id}.md`; card.appendChild(a);
   }
   renderTasks(); renderCounts();
 }
-
+function darker(hex) { const n = parseInt(hex.slice(1), 16), f = v => Math.round(v * .75); return `rgb(${f(n >> 16 & 255)},${f(n >> 8 & 255)},${f(n & 255)})`; }
 function renderTasks() {
-  const ul = document.getElementById("tasks");
-  const empty = document.getElementById("empty");
+  const ul = document.getElementById("tasks"), empty = document.getElementById("empty");
   ul.querySelectorAll("li.task").forEach(n => n.remove());
   const order = { fazendo: 0, fila: 1, feito: 2 };
-  const list = tasks
-    .filter(t => !selTeam || t.equipe === selTeam)
-    .filter(t => filter === "ativas" ? t.status !== "feito" : t.status === filter)
+  const list = tasks.filter(t => !selTeam || t.equipe === selTeam).filter(t => filter === "ativas" ? t.status !== "feito" : t.status === filter)
     .sort((a, b) => (order[a.status] - order[b.status]) || ((b.criado || 0) - (a.criado || 0)));
   empty.hidden = list.length > 0;
-  if (!list.length) {
-    empty.innerHTML = "";
-    empty.append(tasks.length ? "Nada aqui com esse filtro." : "A fila aparece aqui. Escreva a ");
-    if (!tasks.length) { const s = document.createElement("strong"); s.textContent = "primeira tarefa"; empty.append(s, " acima."); }
-  }
+  if (!list.length) { empty.innerHTML = ""; empty.append(tasks.length ? "Nada aqui com esse filtro." : "A fila aparece aqui. Escreva a "); if (!tasks.length) { const s = document.createElement("strong"); s.textContent = "primeira tarefa"; empty.append(s, " acima."); } }
   list.forEach(t => {
     const li = document.createElement("li"); li.className = "task"; li.dataset.s = t.status;
     const bar = document.createElement("span"); bar.className = "bar";
     const body = document.createElement("div"); body.className = "t-body";
     const ti = document.createElement("span"); ti.className = "t-title"; ti.textContent = t.titulo;
     const meta = document.createElement("span"); meta.className = "t-meta";
-    const tm = document.createElement("span"); tm.className = "tm"; tm.textContent = byId[t.equipe]?.nome || t.equipe;
-    tm.style.color = byId[t.equipe]?.cor || "";
-    meta.appendChild(tm);
+    const tm = document.createElement("span"); tm.className = "tm"; tm.textContent = byId[t.equipe]?.nome || t.equipe; if (byId[t.equipe]) tm.style.color = darker(byId[t.equipe].cor); meta.appendChild(tm);
     if (t.cliente) { const c = document.createElement("span"); c.textContent = t.cliente; meta.appendChild(c); }
     if (t.motivo) { const m = document.createElement("span"); m.textContent = t.motivo; meta.appendChild(m); }
     body.append(ti, meta);
     if (t.resultado) { const r = document.createElement("span"); r.className = "t-res"; r.textContent = "Resultado: " + t.resultado; body.appendChild(r); }
     const act = document.createElement("div"); act.className = "t-actions";
-    const b = document.createElement("button"); b.type = "button"; b.textContent = NEXT_LBL[t.status] || "começar";
-    b.addEventListener("click", () => setStatus(t, NEXT[t.status] || "fazendo"));
-    act.appendChild(b);
-    const sel = document.createElement("select"); sel.setAttribute("aria-label", "Mover para equipe"); sel.className = "mv";
+    const b = document.createElement("button"); b.type = "button"; b.textContent = NEXT_LBL[t.status] || "começar"; b.addEventListener("click", () => setStatus(t, NEXT[t.status] || "fazendo")); act.appendChild(b);
+    const sel = document.createElement("select"); sel.className = "mv"; sel.setAttribute("aria-label", "Mover para equipe");
     TEAMS.forEach(tt => { const o = document.createElement("option"); o.value = tt.id; o.textContent = tt.nome; if (tt.id === t.equipe) o.selected = true; sel.appendChild(o); });
-    sel.addEventListener("change", () => moveTask(t, sel.value));
-    act.appendChild(sel);
+    sel.addEventListener("change", () => moveTask(t, sel.value)); act.appendChild(sel);
     li.append(bar, body, act); ul.appendChild(li);
   });
 }
 
-/* ---------- Ações ---------- */
 async function setStatus(t, s) {
   if (!db) { t.status = s; onTaskEvent(s, t); renderPanel(); return; }
-  try { await db.collection("tarefas").doc(t.id).update({ status: s, atualizado: Date.now() }); }
-  catch (e) { msg("Não deu para salvar: " + (e?.message || e?.code || "erro")); }
+  try { await db.collection("tarefas").doc(t.id).update({ status: s, atualizado: Date.now() }); } catch (e) { msg("Não deu para salvar: " + (e?.message || e?.code || "erro")); }
 }
 async function moveTask(t, equipe) {
   if (!db) { t.equipe = equipe; t.motivo = "movida à mão"; onTaskEvent("nova", t); renderPanel(); return; }
-  try { await db.collection("tarefas").doc(t.id).update({ equipe, motivo: "movida à mão", atualizado: Date.now() }); }
-  catch (e) { msg("Não deu para mover: " + (e?.message || e?.code || "erro")); }
+  try { await db.collection("tarefas").doc(t.id).update({ equipe, motivo: "movida à mão", atualizado: Date.now() }); } catch (e) { msg("Não deu para mover: " + (e?.message || e?.code || "erro")); }
 }
-function msg(s) { document.getElementById("f-msg").textContent = s; }
-
+const msg = s => document.getElementById("f-msg").textContent = s;
 const KEYWORDS = [
   ["trafego", /(an[uú]ncio|ads|meta|campanha|tr[aá]fego|cpc|cpm|relat[oó]rio|p[uú]blico|lead)/i],
   ["conteudo", /(post|conte[uú]do|lote|pauta|roteiro|legenda|carrossel|reels|story|calend[aá]rio)/i],
@@ -703,23 +512,15 @@ const KEYWORDS = [
   ["atendimento", /(cliente|reuni[aã]o|onboarding|perfil|cobran|briefing|feedback)/i],
 ];
 function guessTeam(text) { for (const [id, re] of KEYWORDS) if (re.test(text)) return { equipe: id, motivo: "por palavra-chave" }; return { equipe: "diretoria", motivo: "triagem da Diretoria" }; }
-
-let sample = null;
 async function routeTeam(text, cliente) {
   if (sample) {
     try {
-      const r = await sample.json(
-        `Você é a Diretoria da agência Be One Marketing Digital. Escolha UMA equipe para executar a tarefa.\n` +
-        `Equipes:\n${TEAMS.map(t => `- ${t.id}: ${t.desc}`).join("\n")}\n\n` +
-        `Tarefa: ${text}\nCliente: ${cliente || "não informado"}\n\n` +
-        `Responda só JSON: {"equipe": "<id>", "motivo": "<até 6 palavras>"}`,
-        { modelTier: "quick" });
+      const r = await sample.json(`Você é a Diretoria da agência Be One Marketing Digital. Escolha UMA equipe para executar a tarefa.\nEquipes:\n${TEAMS.map(t => `- ${t.id}: ${t.desc}`).join("\n")}\n\nTarefa: ${text}\nCliente: ${cliente || "não informado"}\n\nResponda só JSON: {"equipe": "<id>", "motivo": "<até 6 palavras>"}`, { modelTier: "quick" });
       if (r && byId[r.equipe]) return { equipe: r.equipe, motivo: String(r.motivo || "escolhida pelo Claude").slice(0, 60) };
     } catch (e) { if (e?.code === "not_granted") sample = null; }
   }
   return guessTeam(text);
 }
-
 document.getElementById("add").addEventListener("submit", async ev => {
   ev.preventDefault();
   const tEl = document.getElementById("f-titulo"), eq = document.getElementById("f-equipe"), cl = document.getElementById("f-cliente"), btn = document.getElementById("f-btn");
@@ -736,30 +537,15 @@ document.getElementById("add").addEventListener("submit", async ev => {
   } catch (e) { msg("Não deu para salvar: " + (e?.message || e?.code || "erro")); }
   btn.disabled = false;
 });
-
-document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => {
-  filter = b.dataset.f;
-  document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-  renderTasks();
-}));
+document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => { filter = b.dataset.f; document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); renderTasks(); }));
 document.getElementById("p-clear").addEventListener("click", () => { selTeam = null; renderPanel(); });
-
-function bindRooms() {
-  svg.querySelectorAll(".room").forEach(r => {
-    const pickTeam = () => { selTeam = selTeam === r.dataset.id ? null : r.dataset.id; renderPanel(); };
-    r.addEventListener("click", pickTeam);
-    r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickTeam(); } });
-  });
-}
-
 const selEq = document.getElementById("f-equipe");
 TEAMS.forEach(t => { const o = document.createElement("option"); o.value = t.id; o.textContent = t.nome; selEq.appendChild(o); });
 
-drawOffice(); bindRooms(); spawnAgents(); renderPanel(); render();
-requestAnimationFrame(loop);
-document.fonts?.ready.then(() => TEAMS.forEach(t => t.layoutLabel?.()));
+const ok3d = initScene();
+renderPanel();
+if (ok3d) requestAnimationFrame(loop);
 
-/* ---------- Conexão ---------- */
 (async () => {
   const conn = document.getElementById("conn"), ct = document.getElementById("conn-t");
   const use = window.claude?.use;
@@ -772,18 +558,12 @@ document.fonts?.ready.then(() => TEAMS.forEach(t => t.layoutLabel?.()));
   db.collection("tarefas").onSnapshot(snap => {
     const prev = Object.fromEntries(tasks.map(t => [t.id, t]));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    if (!first) {
-      snap.docChanges().forEach(ch => {
-        const t = { id: ch.doc.id, ...ch.doc.data() }, old = prev[t.id];
-        if (ch.type === "added") onTaskEvent("nova", t);
-        else if (ch.type === "modified" && old) {
-          if (old.equipe !== t.equipe) onTaskEvent("nova", t);
-          else if (old.status !== t.status) onTaskEvent(t.status, t);
-        }
-      });
-    }
-    first = false;
-    renderPanel();
+    if (!first) snap.docChanges().forEach(ch => {
+      const t = { id: ch.doc.id, ...ch.doc.data() }, old = prev[t.id];
+      if (ch.type === "added") onTaskEvent("nova", t);
+      else if (ch.type === "modified" && old) { if (old.equipe !== t.equipe) onTaskEvent("nova", t); else if (old.status !== t.status) onTaskEvent(t.status, t); }
+    });
+    first = false; renderPanel();
   }, e => { conn.classList.replace("live", "off"); ct.textContent = "Fila offline"; msg("A fila compartilhada caiu: " + (e?.message || e?.code)); });
 })();
 </script>
