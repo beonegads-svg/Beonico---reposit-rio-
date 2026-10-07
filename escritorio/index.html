@@ -61,7 +61,7 @@ main.grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16p
 .room:focus-visible .edge { stroke: var(--gold); stroke-width: 2.5; }
 .lbl-bg { fill: rgba(11,16,32,.88); stroke: var(--line); }
 .room.sel .lbl-bg { stroke: var(--gold); }
-.lbl-name { fill: var(--ink); font-family: var(--f-display); font-weight: 700; font-size: 15px; }
+.lbl-name { fill: var(--ink); font-family: var(--f-display); font-weight: 700; font-size: 13.5px; }
 .lbl-meta { fill: var(--muted); font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .04em; }
 .lbl-num { fill: var(--gold); font-family: var(--f-display); font-weight: 800; font-size: 22px; }
 .wire { stroke: var(--gold); stroke-opacity: .35; stroke-width: 1.2; stroke-dasharray: 3 7; fill: none; animation: flow 2.4s linear infinite; }
@@ -115,6 +115,14 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
 .t-actions button:hover { border-color: var(--gold); }
 .empty { color: var(--muted); font-size: 13.5px; padding: 18px 4px; text-align: center; }
 .empty strong { color: var(--ink); font-weight: 600; }
+.agent { cursor: pointer; }
+.brain-t { fill: #F5E7B0; font: 500 10.5px var(--f-mono); letter-spacing: .08em; }
+.agent.thinking { filter: drop-shadow(0 0 6px rgba(232,197,71,.9)); }
+.bubble-bg { fill: #F5F0E1; stroke: rgba(11,16,32,.25); }
+.bubble-t { fill: #141A2E; font: 600 11px var(--f-body); }
+.room.lbl { cursor: pointer; }
+.panel-h .path { font-family: var(--f-mono); font-size: 11.5px; }
+.t-actions select.mv { font: 500 11px var(--f-mono); padding: 2px 4px; border-radius: 6px; max-width: 110px; }
 </style>
 
 <div class="wrap">
@@ -133,8 +141,8 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
 
   <main class="grid">
     <section class="office" aria-label="Planta do escritório">
-      <svg id="map" viewBox="0 0 1000 660" role="img" aria-label="Escritório isométrico com sete salas de equipe ligadas ao cérebro central"></svg>
-      <span class="hint">Clique numa sala para ver a equipe e a fila dela</span>
+      <svg id="map" viewBox="90 72 820 560" role="img" aria-label="Escritório isométrico com sete salas de equipe ligadas ao cérebro central"></svg>
+      <span class="hint">Clique numa sala ou num agente</span>
     </section>
 
     <aside class="panel">
@@ -173,18 +181,31 @@ li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-th
 
 <script>
 const TEAMS = [
-  { id: "diretoria",   nome: "Diretoria",   cor: "#E8C547", gx: 0, gy: 0, agentes: 1, desc: "Prioriza, cobra pendências e distribui o trabalho.", tools: ["gerente-lucas", "Notion"] },
-  { id: "atendimento", nome: "Atendimento", cor: "#F28FB1", gx: 1, gy: 0, agentes: 2, desc: "Onboarding, perfil, histórico e felicidade dos clientes.", tools: ["client-profile", "Notion", "Google Calendar"] },
-  { id: "conteudo",    nome: "Conteúdo",    cor: "#B48CFF", gx: 2, gy: 0, agentes: 3, desc: "Lotes do mês, pautas, roteiros e peças.", tools: ["content-planning", "client-profile", "Canva"] },
-  { id: "trafego",     nome: "Tráfego",     cor: "#6FB7FF", gx: 2, gy: 1, agentes: 3, desc: "Meta Ads: relatórios, otimização, públicos. Usa o Jev para triagem.", tools: ["relatorio-meta-ads", "Meta Ads", "TypeSafe Jev"] },
-  { id: "comercial",   nome: "Comercial",   cor: "#F2A65A", gx: 2, gy: 2, agentes: 1, desc: "Propostas e orçamentos de LP e site.", tools: ["proposta-landing-page"] },
-  { id: "sites",       nome: "Sites",       cor: "#5BD6A0", gx: 1, gy: 2, agentes: 2, desc: "Landing pages e sites depois da proposta aprovada.", tools: ["landing-page-build", "Canva"] },
-  { id: "expansao",    nome: "Expansão",    cor: "#4DD0E1", gx: 0, gy: 2, agentes: 1, desc: "Inventário de lojas e investimento de franquia.", tools: ["inventario-loja-investimento", "Google Drive"] },
+  { id: "diretoria",   nome: "Diretoria",   cor: "#E8C547", gx: 0, gy: 0, agentes: 1, desc: "Prioriza, cobra pendências e distribui o trabalho.", tools: ["gerente-lucas", "Notion"], work: ["revisando prioridades", "lendo a fila", "cobrando pendências"] },
+  { id: "atendimento", nome: "Atendimento", cor: "#F28FB1", gx: 1, gy: 0, agentes: 2, desc: "Onboarding, perfil, histórico e felicidade dos clientes.", tools: ["client-profile", "Notion", "Google Calendar"], work: ["atualizando fichas", "preparando reunião", "registrando interação"] },
+  { id: "conteudo",    nome: "Conteúdo",    cor: "#B48CFF", gx: 2, gy: 0, agentes: 3, desc: "Lotes do mês, pautas, roteiros e peças.", tools: ["content-planning", "client-profile", "Canva"], work: ["escrevendo roteiro", "montando pauta", "ajustando legenda"] },
+  { id: "trafego",     nome: "Tráfego",     cor: "#6FB7FF", gx: 2, gy: 1, agentes: 3, desc: "Meta Ads: relatórios, otimização, públicos. Usa o Jev para triagem.", tools: ["relatorio-meta-ads", "Meta Ads", "TypeSafe Jev"], work: ["olhando CPM", "testando público", "triando leads com o Jev"] },
+  { id: "comercial",   nome: "Comercial",   cor: "#F2A65A", gx: 2, gy: 2, agentes: 1, desc: "Propostas e orçamentos de LP e site.", tools: ["proposta-landing-page"], work: ["montando proposta", "revisando escopo"] },
+  { id: "sites",       nome: "Sites",       cor: "#5BD6A0", gx: 1, gy: 2, agentes: 2, desc: "Landing pages e sites depois da proposta aprovada.", tools: ["landing-page-build", "Canva"], work: ["ajustando layout", "testando no celular"] },
+  { id: "expansao",    nome: "Expansão",    cor: "#4DD0E1", gx: 0, gy: 2, agentes: 1, desc: "Inventário de lojas e investimento de franquia.", tools: ["inventario-loja-investimento", "Google Drive"], work: ["classificando inventário", "somando investimento"] },
 ];
 const BRAIN = { gx: 1, gy: 1 };
 const byId = Object.fromEntries(TEAMS.map(t => [t.id, t]));
 const NEXT = { fila: "fazendo", fazendo: "feito", feito: "fila" };
 const NEXT_LBL = { fila: "começar", fazendo: "concluir", feito: "reabrir" };
+const HANDOFFS = [
+  ["trafego", "conteudo", "Os criativos cansaram. Tem novos?", "Mando 3 variações."],
+  ["comercial", "sites", "Proposta aprovada! A LP é sua.", "Já abro o design."],
+  ["atendimento", "conteudo", "Cliente pediu mais Reels.", "Entra no próximo lote."],
+  ["diretoria", "trafego", "Como estão os números?", "Puxando agora."],
+  ["sites", "comercial", "LP no ar, pode avisar.", "Mando a mensagem."],
+  ["expansao", "diretoria", "Inventário classificado.", "Ótimo, registra no cérebro."],
+  ["atendimento", "diretoria", "Tem cliente em atenção.", "Prioridade hoje."],
+  ["conteudo", "atendimento", "Lote pronto pra aprovação.", "Envio pro cliente."],
+  ["trafego", "atendimento", "Relatório pronto.", "Mando ainda hoje."],
+  ["diretoria", "comercial", "Algum orçamento parado?", "Um, vou cobrar."],
+];
+const GREET = ["oi!", "e aí?", "bom dia!", "café?", "bora!", "👋"];
 
 /* ---------- Isometria ---------- */
 const svg = document.getElementById("map");
@@ -192,18 +213,23 @@ const NS = "http://www.w3.org/2000/svg";
 const C = Math.cos(Math.PI / 6), S = Math.sin(Math.PI / 6);
 const U = 118, GAP = 34, OX = 500, OY = 150;
 const iso = (x, y, z = 0) => [OX + (x - y) * C, OY + (x + y) * S - z];
-const pts = a => a.map(p => p.join(",")).join(" ");
+const isoL = (x, y, z = 0) => [(x - y) * C, (x + y) * S - z];
+const pts = a => a.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
 function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
 function shade(hex, f) { const n = parseInt(hex.slice(1), 16); const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255; const m = v => Math.max(0, Math.min(255, Math.round(v * f))); return `rgb(${m(r)},${m(g)},${m(b)})`; }
-function box(x, y, w, d, h, z, top, left, right, parent, cls) {
-  const g = el("g", cls ? { class: cls } : {}, parent);
-  el("polygon", { points: pts([iso(x, y + d, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x, y + d, z + h)]), fill: left }, g);
-  el("polygon", { points: pts([iso(x + w, y, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x + w, y, z + h)]), fill: right }, g);
-  el("polygon", { points: pts([iso(x, y, z + h), iso(x + w, y, z + h), iso(x + w, y + d, z + h), iso(x, y + d, z + h)]), fill: top, class: "top" }, g);
+function box(x, y, w, d, h, z, top, left, right, parent, P = iso) {
+  const g = el("g", {}, parent);
+  el("polygon", { points: pts([P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)]), fill: left }, g);
+  el("polygon", { points: pts([P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)]), fill: right }, g);
+  el("polygon", { points: pts([P(x, y, z + h), P(x + w, y, z + h), P(x + w, y + d, z + h), P(x, y + d, z + h)]), fill: top, class: "top" }, g);
   return g;
 }
 const cell = (gx, gy) => ({ x: gx * (U + GAP), y: gy * (U + GAP) });
-const center = (gx, gy, z = 0) => { const c = cell(gx, gy); return iso(c.x + U / 2, c.y + U / 2, z); };
+const cellCenter = (gx, gy) => { const c = cell(gx, gy); return { x: c.x + U / 2, y: c.y + U / 2 }; };
+const TOTAL = 3 * U + 2 * GAP;
+
+const seats = {};
+let agentLayer, bubbleLayer;
 
 function drawOffice() {
   svg.textContent = "";
@@ -212,81 +238,255 @@ function drawOffice() {
   el("stop", { offset: "0", "stop-color": "#E8C547", "stop-opacity": ".55" }, rg);
   el("stop", { offset: "1", "stop-color": "#E8C547", "stop-opacity": "0" }, rg);
 
-  // Piso geral
-  const T = 3 * U + 2 * GAP;
-  el("polygon", { points: pts([iso(-20, -20), iso(T + 20, -20), iso(T + 20, T + 20), iso(-20, T + 20)]), fill: "#10172C", stroke: "#1E2846" });
-  // Corredores
-  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {}
+  el("polygon", { points: pts([iso(-20, -20), iso(TOTAL + 20, -20), iso(TOTAL + 20, TOTAL + 20), iso(-20, TOTAL + 20)]), fill: "#10172C", stroke: "#1E2846" });
 
-  // Fios do cérebro
-  const bc = center(BRAIN.gx, BRAIN.gy, 30);
+  const bc = iso(cellCenter(1, 1).x, cellCenter(1, 1).y, 30);
   const wires = el("g", {});
-  TEAMS.forEach(t => { const c = center(t.gx, t.gy, 14); el("path", { d: `M${bc[0]},${bc[1]} Q${(bc[0] + c[0]) / 2},${Math.min(bc[1], c[1]) - 40} ${c[0]},${c[1]}`, class: "wire" }, wires); });
+  TEAMS.forEach(t => { const cc = cellCenter(t.gx, t.gy), c = iso(cc.x, cc.y, 14); el("path", { d: `M${bc[0]},${bc[1]} Q${(bc[0] + c[0]) / 2},${Math.min(bc[1], c[1]) - 40} ${c[0]},${c[1]}`, class: "wire" }, wires); });
 
-  // Ordem de desenho: de trás para frente
-  const items = TEAMS.map(t => ({ t, k: t.gx + t.gy })).concat([{ brain: true, k: BRAIN.gx + BRAIN.gy }]).sort((a, b) => a.k - b.k || (a.brain ? 1 : -1));
-  const labels = [];
+  const items = TEAMS.map(t => ({ t, k: t.gx + t.gy })).concat([{ brain: true, k: 2 }]).sort((a, b) => a.k - b.k || (a.brain ? 1 : -1));
   items.forEach(it => {
     if (it.brain) { drawBrain(); return; }
     const t = it.t, c = cell(t.gx, t.gy);
     const g = el("g", { class: "room", tabindex: "0", role: "button", "aria-label": `Sala ${t.nome}`, "data-id": t.id });
     box(c.x, c.y, U, U, 10, 0, shade(t.cor, .42), shade(t.cor, .26), shade(t.cor, .2), g);
     el("polygon", { class: "edge", points: pts([iso(c.x, c.y, 10), iso(c.x + U, c.y, 10), iso(c.x + U, c.y + U, 10), iso(c.x, c.y + U, 10)]), fill: "none", stroke: shade(t.cor, .9), "stroke-opacity": ".55", "stroke-width": "1.2" }, g);
-    // Paredes de fundo
     box(c.x, c.y, U, 4, 26, 10, shade(t.cor, .5), shade(t.cor, .32), shade(t.cor, .28), g);
     box(c.x, c.y, 4, U, 26, 10, shade(t.cor, .5), shade(t.cor, .32), shade(t.cor, .28), g);
-    // Mesas e agentes
+    // Planta no canto
+    box(c.x + 8, c.y + 8, 10, 10, 12, 10, "#3B2A1A", "#2A1E12", "#24190F", g);
+    el("circle", { cx: iso(c.x + 13, c.y + 13, 30)[0], cy: iso(c.x + 13, c.y + 13, 30)[1], r: 8, fill: "#3E8F5E" }, g);
     const n = t.agentes;
-    const spots = [[0.5, 0.55], [0.3, 0.38], [0.7, 0.7], [0.3, 0.72], [0.7, 0.36]];
+    const spots = [[0.5, 0.5], [0.32, 0.36], [0.7, 0.62], [0.3, 0.68], [0.7, 0.32]];
     const order = n === 1 ? [0] : n === 2 ? [1, 2] : [1, 0, 2];
+    seats[t.id] = [];
     order.forEach((si, i) => {
       const [fx, fy] = spots[si];
-      const dx = c.x + U * fx - 14, dy = c.y + U * fy - 9;
+      const dx = c.x + U * fx - 14, dy = c.y + U * fy - 14;
       box(dx, dy, 28, 18, 12, 10, "#C9A36B", "#8C6B3F", "#7A5C35", g);
       box(dx + 6, dy + 2, 16, 3, 13, 22, "#1C2540", "#141B30", "#141B30", g);
       el("polygon", { class: "screen", points: pts([iso(dx + 7, dy + 5, 24), iso(dx + 21, dy + 5, 24), iso(dx + 21, dy + 5, 33), iso(dx + 7, dy + 5, 33)]), fill: t.cor, "fill-opacity": ".9", style: `animation-delay:${(i * .7).toFixed(1)}s` }, g);
-      const p = iso(dx + 14, dy + 28, 10);
-      box(dx + 9, dy + 22, 10, 8, 14, 10, shade(t.cor, .85), shade(t.cor, .6), shade(t.cor, .5), g);
-      el("circle", { class: "head", cx: p[0], cy: p[1] - 22, r: 5.2, fill: "#F3D9B8", style: `animation-delay:${(i * .5 + t.gx * .3).toFixed(1)}s` }, g);
+      box(dx + 9, dy + 26, 10, 3, 14, 10, shade(t.cor, .7), shade(t.cor, .5), shade(t.cor, .45), g);
+      seats[t.id].push({ x: dx + 14, y: dy + 24 });
     });
-    labels.push({ t, g });
   });
-  // Etiquetas por cima de tudo
-  labels.forEach(({ t, g }) => drawLabel(t, g));
+  agentLayer = el("g", { id: "agents" });
+  const labelLayer = el("g", {});
+  TEAMS.forEach(t => drawLabel(t, labelLayer));
+  bubbleLayer = el("g", { id: "bubbles" });
 }
 
 function drawBrain() {
-  const c = cell(BRAIN.gx, BRAIN.gy);
+  const cc = cellCenter(1, 1);
   const g = el("g", { "aria-label": "Cérebro" });
-  const r = 30, cx = c.x + U / 2, cy = c.y + U / 2;
   const ring = [];
-  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; ring.push(iso(cx + Math.cos(a) * U * .42, cy + Math.sin(a) * U * .42, 4)); }
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; ring.push(iso(cc.x + Math.cos(a) * U * .42, cc.y + Math.sin(a) * U * .42, 4)); }
   el("polygon", { points: pts(ring), fill: "#151E38", stroke: "#E8C547", "stroke-opacity": ".45" }, g);
-  const p = iso(cx, cy, 34);
+  const p = iso(cc.x, cc.y, 34);
   el("ellipse", { cx: p[0], cy: p[1] + 18, rx: 90, ry: 52, fill: "url(#brainGlow)" }, g);
-  // Rede de notas
   const nodes = [];
   for (let i = 0; i < 26; i++) { const a = i * 2.39996, rr = 6 + Math.sqrt(i) * 7.2; nodes.push([p[0] + Math.cos(a) * rr * 1.35, p[1] + Math.sin(a) * rr * .8]); }
   nodes.forEach((n, i) => { if (i) el("line", { x1: p[0], y1: p[1], x2: n[0], y2: n[1], stroke: "#E8C547", "stroke-opacity": ".28", "stroke-width": ".8" }, g); });
-  nodes.forEach((n, i) => el("circle", { cx: n[0], cy: n[1], r: i ? 2.2 : 0, fill: "#F5E7B0" }, g));
+  nodes.forEach((n, i) => { if (i) el("circle", { cx: n[0], cy: n[1], r: 2.2, fill: "#F5E7B0" }, g); });
   el("circle", { class: "brain-core", cx: p[0], cy: p[1], r: 7, fill: "#E8C547" }, g);
-  const lw = 138, lx = p[0] - lw / 2, ly = p[1] + 40;
-  el("rect", { x: lx, y: ly, width: lw, height: 40, rx: 8, fill: "rgba(11,16,32,.9)", stroke: "#E8C547", "stroke-opacity": ".7" }, g);
-  const t1 = el("text", { x: p[0], y: ly + 17, "text-anchor": "middle", class: "lbl-name" }, g); t1.textContent = "O Cérebro";
-  const t2 = el("text", { x: p[0], y: ly + 32, "text-anchor": "middle", class: "lbl-meta" }, g); t2.textContent = "97 NOTAS · OBSIDIAN";
+  const t1 = el("text", { x: p[0], y: p[1] + 30, "text-anchor": "middle", class: "brain-t" }, g); t1.textContent = "O CÉREBRO · 97 NOTAS";
 }
 
-function drawLabel(t, g) {
+function drawLabel(t, layer) {
   const c = cell(t.gx, t.gy);
-  const p = iso(c.x + U * .15, c.y + U * .15, 46);
-  const w = 150, h = 58, x = p[0] - w / 2, y = p[1] - h - 6;
-  const lg = el("g", {}, g);
-  el("rect", { class: "lbl-bg", x, y, width: w, height: h, rx: 8 }, lg);
-  el("circle", { cx: x + 14, cy: y + 16, r: 4, fill: t.cor }, lg);
-  const n = el("text", { x: x + 24, y: y + 20, class: "lbl-name" }, lg); n.textContent = t.nome;
-  const num = el("text", { x: x + 12, y: y + 47, class: "lbl-num" }, lg); num.textContent = t.agentes;
-  const m = el("text", { x: x + 30, y: y + 46, class: "lbl-meta", "data-meta": t.id }, lg);
-  m.textContent = metaFor(t.id);
+  const p = iso(c.x, c.y, 44);
+  const lg = el("g", { class: "room lbl", "data-id": t.id }, layer);
+  const bg = el("rect", { class: "lbl-bg", height: 26, rx: 13 }, lg);
+  const dot = el("circle", { r: 4, fill: t.cor }, lg);
+  const n = el("text", { class: "lbl-name" }, lg); n.textContent = t.nome;
+  const m = el("text", { class: "lbl-meta", "data-meta": t.id }, lg); m.textContent = metaFor(t.id);
+  t.layoutLabel = () => {
+    const nw = n.getComputedTextLength(), mw = m.getComputedTextLength();
+    const w = 23 + nw + 10 + mw + 11, x = p[0] - w / 2, y = p[1] - 26;
+    bg.setAttribute("x", x); bg.setAttribute("y", y); bg.setAttribute("width", w);
+    dot.setAttribute("cx", x + 13); dot.setAttribute("cy", y + 13);
+    n.setAttribute("x", x + 23); n.setAttribute("y", y + 17.5);
+    m.setAttribute("x", x + 23 + nw + 10); m.setAttribute("y", y + 17);
+  };
+  t.layoutLabel();
+}
+
+/* ---------- Agentes vivos ---------- */
+const SKIN = ["#F3D9B8", "#E2B48C", "#C68E63", "#8D5A3B", "#F0C8A0"];
+const HAIR = ["#2B1D14", "#5A3B22", "#151515", "#A0522D", "#D9B26A", "#3A2A4A"];
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const agents = [];
+const rnd = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+
+function makeSprite(a) {
+  const g = el("g", { class: "agent", "data-team": a.team.id }, agentLayer);
+  const title = el("title", {}, g); title.textContent = `${a.team.nome} · agente ${a.n}`;
+  el("ellipse", { cx: 0, cy: 0, rx: 8, ry: 4, fill: "rgba(0,0,0,.35)" }, g);
+  const inner = el("g", {}, g);
+  const legL = box(-4, -2, 3, 4, 8, 0, "#2A3350", "#1D2440", "#1A2038", inner, isoL);
+  const legR = box(1, -2, 3, 4, 8, 0, "#2A3350", "#1D2440", "#1A2038", inner, isoL);
+  box(-5, -3, 10, 6, 10, 8, a.team.cor, shade(a.team.cor, .72), shade(a.team.cor, .6), inner, isoL);
+  box(-4, -4, 8, 8, 8, 18, a.skin, shade(a.skin, .85), shade(a.skin, .75), inner, isoL);
+  box(-4.5, -4.5, 9, 9, 2.5, 25.5, a.hair, shade(a.hair, .8), shade(a.hair, .7), inner, isoL);
+  a.el = g; a.inner = inner; a.legL = legL; a.legR = legR;
+  g.addEventListener("click", ev => { ev.stopPropagation(); selTeam = a.team.id; renderPanel(); say(a, describe(a), 3.5); });
+}
+
+function describe(a) {
+  if (a.state === "walk") return a.goal === "brain" ? "indo ao cérebro" : a.goal === "visit" ? `indo falar com ${byId[a.visitTeam].nome}` : "dando uma volta";
+  const t = currentTask(a.team.id);
+  return t ? "Fazendo: " + t.titulo : pick(a.team.work);
+}
+
+function spawnAgents() {
+  agentLayer.textContent = "";
+  agents.length = 0;
+  TEAMS.forEach(t => seats[t.id].forEach((s, i) => {
+    const a = { team: t, n: i + 1, seat: s, x: s.x, y: s.y, state: "sit", timer: rnd(1, 8), path: [], skin: pick(SKIN), hair: pick(HAIR), face: 1, phase: Math.random() * 6, bubble: null, cool: 0 };
+    makeSprite(a); agents.push(a);
+  }));
+}
+
+function routeTo(a, target) {
+  const from = cellOf(a), to = cellOf(target);
+  const path = [];
+  if (from.gx !== to.gx || from.gy !== to.gy) {
+    path.push(jitter(cellCenter(from.gx, from.gy)));
+    if (from.gx !== to.gx && from.gy !== to.gy) path.push(jitter(cellCenter(to.gx, from.gy)));
+    path.push(jitter(cellCenter(to.gx, to.gy)));
+  }
+  path.push(target);
+  a.path = path; a.state = "walk";
+}
+const jitter = p => ({ x: p.x + rnd(-14, 14), y: p.y + rnd(-14, 14) });
+function cellOf(p) { const k = U + GAP; return { gx: Math.max(0, Math.min(2, Math.floor((p.x + GAP / 2) / k))), gy: Math.max(0, Math.min(2, Math.floor((p.y + GAP / 2) / k))) }; }
+
+function decide(a) {
+  const r = Math.random();
+  const t = currentTask(a.team.id);
+  if (r < 0.5) { a.state = "sit"; a.timer = rnd(5, 11); if (Math.random() < 0.45) say(a, t ? "Fazendo: " + t.titulo : pick(a.team.work), 3.2); return; }
+  if (r < 0.68) { const c = cell(a.team.gx, a.team.gy); a.goal = "wander"; routeTo(a, { x: c.x + rnd(24, U - 16), y: c.y + rnd(40, U - 12) }); return; }
+  if (r < 0.88) {
+    const opts = HANDOFFS.filter(h => h[0] === a.team.id);
+    const h = opts.length ? pick(opts) : pick(HANDOFFS.filter(h => h[1] === a.team.id).map(h => [a.team.id, h[0], pick(GREET), pick(GREET)]));
+    const partnerSeat = pick(seats[h[1]]);
+    a.goal = "visit"; a.visitTeam = h[1]; a.lines = [h[2], h[3]];
+    routeTo(a, { x: partnerSeat.x + rnd(14, 20), y: partnerSeat.y + rnd(-2, 8) });
+    return;
+  }
+  const bc = cellCenter(1, 1);
+  const ang = rnd(0, Math.PI * 2);
+  a.goal = "brain"; routeTo(a, { x: bc.x + Math.cos(ang) * 30, y: bc.y + Math.sin(ang) * 30 });
+}
+
+function arrive(a) {
+  if (a.goal === "home") { a.state = "sit"; a.timer = rnd(6, 12); a.x = a.seat.x; a.y = a.seat.y; a.goal = null; return; }
+  if (a.goal === "visit") {
+    const partner = agents.filter(b => b.team.id === a.visitTeam && b.state === "sit").sort((p, q) => dist(p, a) - dist(q, a))[0];
+    a.state = "pause"; a.timer = 5;
+    a.face = partner && partner.x < a.x ? -1 : 1;
+    say(a, a.lines[0], 2.4);
+    if (partner) setTimeout(() => say(partner, a.lines[1], 2.4), 1500);
+    a.after = "home"; return;
+  }
+  if (a.goal === "brain") { a.state = "pause"; a.timer = 3.5; say(a, "consultando o cérebro…", 3); a.thinking = true; a.after = "home"; return; }
+  if (a.goal === "deliver") {
+    const tgt = agents.filter(b => b.team.id === a.deliverTeam).sort((p, q) => dist(p, a) - dist(q, a))[0];
+    a.state = "pause"; a.timer = 3.8; a.after = "home";
+    say(a, "Nova tarefa: " + a.deliverTitle, 3.2);
+    if (tgt) setTimeout(() => { say(tgt, "Pego!", 2.2); tgt.jump = 0.5; }, 1600);
+    return;
+  }
+  a.state = "pause"; a.timer = rnd(1.5, 3.5); a.after = "home";
+}
+
+function goHome(a) { a.goal = "home"; a.thinking = false; routeTo(a, a.seat); }
+
+function say(a, text, secs) {
+  if (!text) return;
+  if (a.bubble) a.bubble.g.remove();
+  const g = el("g", { class: "bubble" }, bubbleLayer);
+  const s = text.length > 42 ? text.slice(0, 40) + "…" : text;
+  const tx = el("text", { x: 0, y: 0, class: "bubble-t", "text-anchor": "middle" }, g); tx.textContent = s;
+  const w = Math.max(28, tx.getComputedTextLength() + 16);
+  const r = el("rect", { x: -w / 2, y: -15, width: w, height: 21, rx: 10, class: "bubble-bg" }, g);
+  el("path", { d: "M-4,6 L0,11 L4,6 Z", class: "bubble-bg" }, g);
+  g.insertBefore(r, tx);
+  a.bubble = { g, ttl: secs };
+}
+
+function step(dt) {
+  for (const a of agents) {
+    a.phase += dt;
+    if (a.cool > 0) a.cool -= dt;
+    if (a.state === "sit") { a.timer -= dt; if (a.timer <= 0 && !REDUCED) decide(a); }
+    else if (a.state === "pause") { a.timer -= dt; if (a.timer <= 0) { if (a.after === "home") goHome(a); else a.state = "sit"; } }
+    else if (a.state === "walk") {
+      const target = a.path[0];
+      const dx = target.x - a.x, dy = target.y - a.y, d = Math.hypot(dx, dy);
+      const sp = 52 * dt;
+      if (d <= sp) { a.x = target.x; a.y = target.y; a.path.shift(); if (!a.path.length) arrive(a); }
+      else { a.x += dx / d * sp; a.y += dy / d * sp; const sdx = (dx - dy); if (Math.abs(sdx) > 0.5) a.face = sdx < 0 ? -1 : 1; }
+    }
+    if (a.jump > 0) a.jump -= dt;
+    if (a.bubble) { a.bubble.ttl -= dt; if (a.bubble.ttl <= 0) { a.bubble.g.remove(); a.bubble = null; } }
+  }
+  // Encontros no corredor
+  for (let i = 0; i < agents.length; i++) for (let j = i + 1; j < agents.length; j++) {
+    const a = agents[i], b = agents[j];
+    if (a.state === "walk" && b.state === "walk" && a.cool <= 0 && b.cool <= 0 && dist(a, b) < 16) {
+      a.cool = b.cool = 14;
+      say(a, pick(GREET), 1.8); setTimeout(() => say(b, pick(GREET), 1.6), 600);
+    }
+  }
+}
+
+function render() {
+  const sorted = agents.slice().sort((p, q) => (p.x + p.y) - (q.x + q.y));
+  sorted.forEach(a => {
+    const [sx, sy] = iso(a.x, a.y, 10);
+    const walking = a.state === "walk";
+    const bob = walking ? Math.abs(Math.sin(a.phase * 10)) * 1.6 : (a.state === "sit" ? Math.sin(a.phase * 2.2) * 0.6 : 0);
+    const hop = a.jump > 0 ? Math.sin((0.5 - a.jump) / 0.5 * Math.PI) * 8 : 0;
+    a.el.setAttribute("transform", `translate(${sx.toFixed(1)},${(sy - bob - hop).toFixed(1)})`);
+    a.inner.setAttribute("transform", `scale(${a.face},1)`);
+    const sw = walking ? Math.sin(a.phase * 10) * 1.8 : 0;
+    a.legL.setAttribute("transform", `translate(0,${sw.toFixed(1)})`);
+    a.legR.setAttribute("transform", `translate(0,${(-sw).toFixed(1)})`);
+    a.el.classList.toggle("thinking", !!a.thinking);
+    agentLayer.appendChild(a.el);
+    if (a.bubble) a.bubble.g.setAttribute("transform", `translate(${sx.toFixed(1)},${(sy - bob - hop - 40).toFixed(1)})`);
+  });
+}
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (!document.hidden) { step(dt); render(); }
+  requestAnimationFrame(loop);
+}
+
+function currentTask(teamId) { return tasks.find(t => t.equipe === teamId && t.status === "fazendo"); }
+
+function onTaskEvent(kind, t) {
+  if (REDUCED) return;
+  const team = byId[t.equipe]; if (!team) return;
+  if (kind === "nova") {
+    const courier = agents.find(a => a.team.id === "diretoria");
+    if (courier && t.equipe !== "diretoria") {
+      if (courier.bubble) { courier.bubble.g.remove(); courier.bubble = null; }
+      const s = pick(seats[t.equipe]);
+      courier.goal = "deliver"; courier.deliverTeam = t.equipe; courier.deliverTitle = t.titulo;
+      routeTo(courier, { x: s.x + 16, y: s.y + 4 });
+    } else { const a = pick(agents.filter(x => x.team.id === t.equipe)); say(a, "Anotado: " + t.titulo, 3); }
+  } else {
+    const a = agents.filter(x => x.team.id === t.equipe).sort((p, q) => (p.state === "sit" ? 0 : 1) - (q.state === "sit" ? 0 : 1))[0];
+    if (!a) return;
+    if (kind === "fazendo") say(a, "Começando: " + t.titulo, 3.4);
+    if (kind === "feito") { say(a, "Feito ✓ " + t.titulo, 3.4); a.jump = 0.5; agents.filter(x => x.team.id === t.equipe && x !== a).forEach(x => x.jump = 0.5); }
+  }
 }
 
 /* ---------- Estado ---------- */
@@ -300,33 +500,31 @@ function counts(team) {
   tasks.forEach(t => { if ((!team || t.equipe === team) && r[t.status] !== undefined) r[t.status]++; });
   return r;
 }
-function metaFor(id) { const c = counts(id); return `AGENTES · ${c.fila} FILA · ${c.fazendo} FAZ`; }
+function metaFor(id) { const c = counts(id); return c.fila + c.fazendo ? `${c.fila + c.fazendo} ATIVAS` : `${byId[id].agentes} AG`; }
 
 function renderCounts() {
   const c = counts(selTeam);
   for (const k of ["fila", "fazendo", "feito"]) document.getElementById("c-" + k).textContent = c[k];
-  svg.querySelectorAll("[data-meta]").forEach(n => n.textContent = metaFor(n.getAttribute("data-meta")));
+  svg.querySelectorAll("[data-meta]").forEach(n => { const id = n.getAttribute("data-meta"); n.textContent = metaFor(id); byId[id].layoutLabel?.(); });
 }
 
 function renderPanel() {
   const title = document.getElementById("p-title"), card = document.getElementById("p-card"), clear = document.getElementById("p-clear");
   svg.querySelectorAll(".room").forEach(r => r.classList.toggle("sel", r.dataset.id === selTeam));
+  card.innerHTML = "";
   if (!selTeam) {
     title.textContent = "Todas as equipes"; clear.hidden = true;
-    card.innerHTML = "";
     const p = document.createElement("p");
-    p.textContent = "Peça uma tarefa e a Diretoria escolhe a equipe certa. Cada sala é um agente que lê o mesmo cérebro.";
+    p.textContent = "Peça uma tarefa e a Diretoria leva até a equipe certa. Clique num agente para saber o que ele está fazendo.";
     card.appendChild(p);
   } else {
     const t = byId[selTeam];
     title.textContent = "Equipe " + t.nome; clear.hidden = false;
-    card.innerHTML = "";
     const p = document.createElement("p"); p.textContent = t.desc; card.appendChild(p);
     const tl = document.createElement("div"); tl.className = "tools";
     t.tools.forEach(n => { const s = document.createElement("span"); s.className = "tool"; s.textContent = n; tl.appendChild(s); });
     card.appendChild(tl);
-    const a = document.createElement("p"); a.style.fontFamily = "var(--f-mono)"; a.style.fontSize = "11.5px";
-    a.textContent = `.claude/agents/${t.id}.md`; card.appendChild(a);
+    const a = document.createElement("p"); a.className = "path"; a.textContent = `.claude/agents/${t.id}.md`; card.appendChild(a);
   }
   renderTasks(); renderCounts();
 }
@@ -362,25 +560,22 @@ function renderTasks() {
     const b = document.createElement("button"); b.type = "button"; b.textContent = NEXT_LBL[t.status] || "começar";
     b.addEventListener("click", () => setStatus(t, NEXT[t.status] || "fazendo"));
     act.appendChild(b);
-    if (db) {
-      const sel = document.createElement("select"); sel.setAttribute("aria-label", "Mover para equipe");
-      sel.style.cssText = "font:500 11px var(--f-mono);padding:2px 4px;border-radius:6px;max-width:110px";
-      TEAMS.forEach(tt => { const o = document.createElement("option"); o.value = tt.id; o.textContent = tt.nome; if (tt.id === t.equipe) o.selected = true; sel.appendChild(o); });
-      sel.addEventListener("change", () => moveTask(t, sel.value));
-      act.appendChild(sel);
-    }
+    const sel = document.createElement("select"); sel.setAttribute("aria-label", "Mover para equipe"); sel.className = "mv";
+    TEAMS.forEach(tt => { const o = document.createElement("option"); o.value = tt.id; o.textContent = tt.nome; if (tt.id === t.equipe) o.selected = true; sel.appendChild(o); });
+    sel.addEventListener("change", () => moveTask(t, sel.value));
+    act.appendChild(sel);
     li.append(bar, body, act); ul.appendChild(li);
   });
 }
 
 /* ---------- Ações ---------- */
 async function setStatus(t, s) {
-  if (!db) { t.status = s; renderPanel(); return; }
+  if (!db) { t.status = s; onTaskEvent(s, t); renderPanel(); return; }
   try { await db.collection("tarefas").doc(t.id).update({ status: s, atualizado: Date.now() }); }
   catch (e) { msg("Não deu para salvar: " + (e?.message || e?.code || "erro")); }
 }
 async function moveTask(t, equipe) {
-  if (!db) return;
+  if (!db) { t.equipe = equipe; t.motivo = "movida à mão"; onTaskEvent("nova", t); renderPanel(); return; }
   try { await db.collection("tarefas").doc(t.id).update({ equipe, motivo: "movida à mão", atualizado: Date.now() }); }
   catch (e) { msg("Não deu para mover: " + (e?.message || e?.code || "erro")); }
 }
@@ -422,7 +617,7 @@ document.getElementById("add").addEventListener("submit", async ev => {
   const doc = { titulo, cliente, equipe: r.equipe, motivo: r.motivo, status: "fila", criado: Date.now() };
   try {
     if (db) await db.collection("tarefas").add(doc);
-    else { tasks.push({ id: "local-" + Date.now(), ...doc }); renderPanel(); }
+    else { const t = { id: "local-" + Date.now(), ...doc }; tasks.push(t); onTaskEvent("nova", t); renderPanel(); }
     tEl.value = ""; cl.value = "";
     msg(`Na fila da equipe ${byId[r.equipe].nome}${db ? "" : " (só nesta tela: sem conexão com a fila compartilhada)"}.`);
   } catch (e) { msg("Não deu para salvar: " + (e?.message || e?.code || "erro")); }
@@ -438,16 +633,18 @@ document.getElementById("p-clear").addEventListener("click", () => { selTeam = n
 
 function bindRooms() {
   svg.querySelectorAll(".room").forEach(r => {
-    const pick = () => { selTeam = selTeam === r.dataset.id ? null : r.dataset.id; renderPanel(); };
-    r.addEventListener("click", pick);
-    r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+    const pickTeam = () => { selTeam = selTeam === r.dataset.id ? null : r.dataset.id; renderPanel(); };
+    r.addEventListener("click", pickTeam);
+    r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickTeam(); } });
   });
 }
 
-const sel = document.getElementById("f-equipe");
-TEAMS.forEach(t => { const o = document.createElement("option"); o.value = t.id; o.textContent = t.nome; sel.appendChild(o); });
+const selEq = document.getElementById("f-equipe");
+TEAMS.forEach(t => { const o = document.createElement("option"); o.value = t.id; o.textContent = t.nome; selEq.appendChild(o); });
 
-drawOffice(); bindRooms(); renderPanel();
+drawOffice(); bindRooms(); spawnAgents(); renderPanel(); render();
+requestAnimationFrame(loop);
+document.fonts?.ready.then(() => TEAMS.forEach(t => t.layoutLabel?.()));
 
 /* ---------- Conexão ---------- */
 (async () => {
@@ -458,8 +655,21 @@ drawOffice(); bindRooms(); renderPanel();
   try { db = await use("db"); } catch { db = null; }
   if (!db) { ct.textContent = "Fila local"; renderTasks(); return; }
   conn.classList.replace("off", "live"); ct.textContent = "Fila compartilhada";
+  let first = true;
   db.collection("tarefas").onSnapshot(snap => {
+    const prev = Object.fromEntries(tasks.map(t => [t.id, t]));
     tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!first) {
+      snap.docChanges().forEach(ch => {
+        const t = { id: ch.doc.id, ...ch.doc.data() }, old = prev[t.id];
+        if (ch.type === "added") onTaskEvent("nova", t);
+        else if (ch.type === "modified" && old) {
+          if (old.equipe !== t.equipe) onTaskEvent("nova", t);
+          else if (old.status !== t.status) onTaskEvent(t.status, t);
+        }
+      });
+    }
+    first = false;
     renderPanel();
   }, e => { conn.classList.replace("live", "off"); ct.textContent = "Fila offline"; msg("A fila compartilhada caiu: " + (e?.message || e?.code)); });
 })();
