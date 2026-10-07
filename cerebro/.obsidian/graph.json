@@ -15,6 +15,13 @@
       }
     },
     {
+      "query": "path:equipes",
+      "color": {
+        "a": 1,
+        "rgb": 16117985
+      }
+    },
+    {
       "query": "tag:#ativo",
       "color": {
         "a": 1,

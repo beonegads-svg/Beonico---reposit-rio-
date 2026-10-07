@@ -1,0 +1,466 @@
+<title>Escritório Be One</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: escritório isométrico à noite (planta navy, luz dourada da marca) à esquerda; fila de tarefas à direita; empilha no celular. Visual único, escuro por escolha. */
+:root {
+  --floor: #0B1020;
+  --panel: #121A30;
+  --panel-2: #18223D;
+  --line: #2A3658;
+  --ink: #EEF1F8;
+  --muted: #8E9AB8;
+  --gold: #E8C547;
+  --gold-soft: rgba(232,197,71,.16);
+  --ok: #5BD6A0;
+  --doing: #6FB7FF;
+  --wait: #F2A65A;
+  --f-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--floor);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.45;
+}
+.wrap { padding-inline: 16px; padding-block: 16px 32px; max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+header.top {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;
+  padding-block: 10px; border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.brand h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(22px, 3vw, 30px); letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.brand h1 b { color: var(--gold); font-weight: 800; }
+.brand .sub { font-family: var(--f-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; font-family: var(--f-mono); font-size: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip strong { color: var(--ink); font-weight: 500; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.chip.fila .dot { color: var(--wait); } .chip.fazendo .dot { color: var(--doing); } .chip.feito .dot { color: var(--ok); }
+.chip.live .dot { color: var(--ok); box-shadow: 0 0 0 3px rgba(91,214,160,.18); }
+.chip.off .dot { color: var(--muted); }
+
+main.grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+@media (max-width: 980px) { main.grid { grid-template-columns: minmax(0, 1fr); } }
+
+.office { position: relative; min-width: 0; background: radial-gradient(ellipse at 50% 45%, #16204000 0%, #0B1020 70%), var(--floor); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.office svg { display: block; width: 100%; height: auto; max-width: 100%; }
+.office .hint { position: absolute; left: 14px; bottom: 12px; font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; pointer-events: none; }
+
+/* SVG */
+.room { cursor: pointer; outline: none; }
+.room .top { transition: filter .2s; }
+.room:hover .top, .room:focus-visible .top { filter: brightness(1.25); }
+.room.sel .edge { stroke: var(--gold); stroke-width: 2.5; }
+.room:focus-visible .edge { stroke: var(--gold); stroke-width: 2.5; }
+.lbl-bg { fill: rgba(11,16,32,.88); stroke: var(--line); }
+.room.sel .lbl-bg { stroke: var(--gold); }
+.lbl-name { fill: var(--ink); font-family: var(--f-display); font-weight: 700; font-size: 15px; }
+.lbl-meta { fill: var(--muted); font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .04em; }
+.lbl-num { fill: var(--gold); font-family: var(--f-display); font-weight: 800; font-size: 22px; }
+.wire { stroke: var(--gold); stroke-opacity: .35; stroke-width: 1.2; stroke-dasharray: 3 7; fill: none; animation: flow 2.4s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -40; } }
+.head { animation: bob 2.6s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-2.5px); } }
+.screen { animation: glow 3.2s ease-in-out infinite; }
+@keyframes glow { 50% { opacity: .55; } }
+.brain-core { animation: pulse 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pulse { 50% { transform: scale(1.12); opacity: .8; } }
+@media (prefers-reduced-motion: reduce) { .wire, .head, .screen, .brain-core { animation: none; } }
+
+/* Painel */
+aside.panel { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; }
+.panel-h { padding: 16px 16px 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.panel-h h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.panel-h h2 button { font: 500 12px var(--f-mono); color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+.panel-h h2 button:hover { color: var(--ink); }
+.team-card { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--muted); }
+.team-card p { margin: 0; }
+.tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.tool { font: 500 11.5px var(--f-mono); color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; }
+
+form.add { padding: 14px 16px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+form.add label { font: 500 11px var(--f-mono); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+input, select, textarea { font: 400 14px var(--f-body); color: var(--ink); background: var(--floor); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; min-width: 0; }
+textarea { resize: vertical; min-height: 58px; width: 100%; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+.row > select { flex: 1 1 140px; } .row > input { flex: 1 1 140px; }
+.btn { font: 600 14px var(--f-body); color: #1A1606; background: var(--gold); border: 0; border-radius: 8px; padding: 10px 14px; cursor: pointer; }
+.btn:disabled { opacity: .55; cursor: progress; }
+.form-msg { font-size: 12.5px; color: var(--muted); min-height: 1.2em; margin: 0; }
+
+.filters { display: flex; gap: 6px; padding: 12px 16px 0; flex-wrap: wrap; }
+.filters button { font: 500 12px var(--f-mono); color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.filters button[aria-pressed="true"] { color: var(--ink); border-color: var(--gold); background: var(--gold-soft); }
+ul.tasks { list-style: none; margin: 0; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px; max-height: 620px; overflow-y: auto; }
+li.task { display: grid; grid-template-columns: 4px minmax(0,1fr) auto; gap: 10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 10px 10px 0; overflow: hidden; }
+li.task .bar { border-radius: 0 3px 3px 0; }
+li.task[data-s="fila"] .bar { background: var(--wait); }
+li.task[data-s="fazendo"] .bar { background: var(--doing); }
+li.task[data-s="feito"] .bar { background: var(--ok); }
+li.task[data-s="feito"] .t-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.t-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.t-title { font-weight: 500; font-size: 14px; overflow-wrap: anywhere; }
+.t-meta { font: 400 11.5px var(--f-mono); color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+.t-meta .tm { color: var(--ink); }
+.t-actions { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.t-actions button { font: 500 11.5px var(--f-mono); color: var(--ink); background: var(--floor); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
+.t-actions button:hover { border-color: var(--gold); }
+.empty { color: var(--muted); font-size: 13.5px; padding: 18px 4px; text-align: center; }
+.empty strong { color: var(--ink); font-weight: 600; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Escritório <b>Be One</b></h1>
+      <span class="sub">7 equipes · 1 cérebro · 97 notas</span>
+    </div>
+    <div class="stats" aria-live="polite">
+      <span class="chip fila"><span class="dot"></span>Na fila <strong id="c-fila">0</strong></span>
+      <span class="chip fazendo"><span class="dot"></span>Fazendo <strong id="c-fazendo">0</strong></span>
+      <span class="chip feito"><span class="dot"></span>Feito <strong id="c-feito">0</strong></span>
+      <span class="chip off" id="conn"><span class="dot"></span><span id="conn-t">Conectando…</span></span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="office" aria-label="Planta do escritório">
+      <svg id="map" viewBox="0 0 1000 660" role="img" aria-label="Escritório isométrico com sete salas de equipe ligadas ao cérebro central"></svg>
+      <span class="hint">Clique numa sala para ver a equipe e a fila dela</span>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-h">
+        <h2><span id="p-title">Todas as equipes</span><button type="button" id="p-clear" hidden>ver todas</button></h2>
+        <div class="team-card" id="p-card">
+          <p>Peça uma tarefa e a Diretoria escolhe a equipe certa. Cada sala é um agente em <code>.claude/agents/</code> que lê o mesmo cérebro.</p>
+        </div>
+      </div>
+
+      <form class="add" id="add">
+        <label for="f-titulo">Nova tarefa</label>
+        <textarea id="f-titulo" placeholder="Ex.: relatório de outubro da Sodiê Pinda" required></textarea>
+        <div class="row">
+          <select id="f-equipe" aria-label="Equipe">
+            <option value="auto">Claude escolhe a equipe</option>
+          </select>
+          <input id="f-cliente" placeholder="Cliente (opcional)" aria-label="Cliente">
+        </div>
+        <button class="btn" id="f-btn" type="submit">Pôr na fila</button>
+        <p class="form-msg" id="f-msg"></p>
+      </form>
+
+      <div class="filters" role="group" aria-label="Filtrar por estado">
+        <button type="button" data-f="ativas" aria-pressed="true">Ativas</button>
+        <button type="button" data-f="fila" aria-pressed="false">Fila</button>
+        <button type="button" data-f="fazendo" aria-pressed="false">Fazendo</button>
+        <button type="button" data-f="feito" aria-pressed="false">Feito</button>
+      </div>
+      <ul class="tasks" id="tasks">
+        <li class="empty" id="empty">A fila aparece aqui. Escreva a <strong>primeira tarefa</strong> acima.</li>
+      </ul>
+    </aside>
+  </main>
+</div>
+
+<script>
+const TEAMS = [
+  { id: "diretoria",   nome: "Diretoria",   cor: "#E8C547", gx: 0, gy: 0, agentes: 1, desc: "Prioriza, cobra pendências e distribui o trabalho.", tools: ["gerente-lucas", "Notion"] },
+  { id: "atendimento", nome: "Atendimento", cor: "#F28FB1", gx: 1, gy: 0, agentes: 2, desc: "Onboarding, perfil, histórico e felicidade dos clientes.", tools: ["client-profile", "Notion", "Google Calendar"] },
+  { id: "conteudo",    nome: "Conteúdo",    cor: "#B48CFF", gx: 2, gy: 0, agentes: 3, desc: "Lotes do mês, pautas, roteiros e peças.", tools: ["content-planning", "client-profile", "Canva"] },
+  { id: "trafego",     nome: "Tráfego",     cor: "#6FB7FF", gx: 2, gy: 1, agentes: 3, desc: "Meta Ads: relatórios, otimização, públicos. Usa o Jev para triagem.", tools: ["relatorio-meta-ads", "Meta Ads", "TypeSafe Jev"] },
+  { id: "comercial",   nome: "Comercial",   cor: "#F2A65A", gx: 2, gy: 2, agentes: 1, desc: "Propostas e orçamentos de LP e site.", tools: ["proposta-landing-page"] },
+  { id: "sites",       nome: "Sites",       cor: "#5BD6A0", gx: 1, gy: 2, agentes: 2, desc: "Landing pages e sites depois da proposta aprovada.", tools: ["landing-page-build", "Canva"] },
+  { id: "expansao",    nome: "Expansão",    cor: "#4DD0E1", gx: 0, gy: 2, agentes: 1, desc: "Inventário de lojas e investimento de franquia.", tools: ["inventario-loja-investimento", "Google Drive"] },
+];
+const BRAIN = { gx: 1, gy: 1 };
+const byId = Object.fromEntries(TEAMS.map(t => [t.id, t]));
+const NEXT = { fila: "fazendo", fazendo: "feito", feito: "fila" };
+const NEXT_LBL = { fila: "começar", fazendo: "concluir", feito: "reabrir" };
+
+/* ---------- Isometria ---------- */
+const svg = document.getElementById("map");
+const NS = "http://www.w3.org/2000/svg";
+const C = Math.cos(Math.PI / 6), S = Math.sin(Math.PI / 6);
+const U = 118, GAP = 34, OX = 500, OY = 150;
+const iso = (x, y, z = 0) => [OX + (x - y) * C, OY + (x + y) * S - z];
+const pts = a => a.map(p => p.join(",")).join(" ");
+function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
+function shade(hex, f) { const n = parseInt(hex.slice(1), 16); const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255; const m = v => Math.max(0, Math.min(255, Math.round(v * f))); return `rgb(${m(r)},${m(g)},${m(b)})`; }
+function box(x, y, w, d, h, z, top, left, right, parent, cls) {
+  const g = el("g", cls ? { class: cls } : {}, parent);
+  el("polygon", { points: pts([iso(x, y + d, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x, y + d, z + h)]), fill: left }, g);
+  el("polygon", { points: pts([iso(x + w, y, z), iso(x + w, y + d, z), iso(x + w, y + d, z + h), iso(x + w, y, z + h)]), fill: right }, g);
+  el("polygon", { points: pts([iso(x, y, z + h), iso(x + w, y, z + h), iso(x + w, y + d, z + h), iso(x, y + d, z + h)]), fill: top, class: "top" }, g);
+  return g;
+}
+const cell = (gx, gy) => ({ x: gx * (U + GAP), y: gy * (U + GAP) });
+const center = (gx, gy, z = 0) => { const c = cell(gx, gy); return iso(c.x + U / 2, c.y + U / 2, z); };
+
+function drawOffice() {
+  svg.textContent = "";
+  const defs = el("defs", {});
+  const rg = el("radialGradient", { id: "brainGlow" }, defs);
+  el("stop", { offset: "0", "stop-color": "#E8C547", "stop-opacity": ".55" }, rg);
+  el("stop", { offset: "1", "stop-color": "#E8C547", "stop-opacity": "0" }, rg);
+
+  // Piso geral
+  const T = 3 * U + 2 * GAP;
+  el("polygon", { points: pts([iso(-20, -20), iso(T + 20, -20), iso(T + 20, T + 20), iso(-20, T + 20)]), fill: "#10172C", stroke: "#1E2846" });
+  // Corredores
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {}
+
+  // Fios do cérebro
+  const bc = center(BRAIN.gx, BRAIN.gy, 30);
+  const wires = el("g", {});
+  TEAMS.forEach(t => { const c = center(t.gx, t.gy, 14); el("path", { d: `M${bc[0]},${bc[1]} Q${(bc[0] + c[0]) / 2},${Math.min(bc[1], c[1]) - 40} ${c[0]},${c[1]}`, class: "wire" }, wires); });
+
+  // Ordem de desenho: de trás para frente
+  const items = TEAMS.map(t => ({ t, k: t.gx + t.gy })).concat([{ brain: true, k: BRAIN.gx + BRAIN.gy }]).sort((a, b) => a.k - b.k || (a.brain ? 1 : -1));
+  const labels = [];
+  items.forEach(it => {
+    if (it.brain) { drawBrain(); return; }
+    const t = it.t, c = cell(t.gx, t.gy);
+    const g = el("g", { class: "room", tabindex: "0", role: "button", "aria-label": `Sala ${t.nome}`, "data-id": t.id });
+    box(c.x, c.y, U, U, 10, 0, shade(t.cor, .42), shade(t.cor, .26), shade(t.cor, .2), g);
+    el("polygon", { class: "edge", points: pts([iso(c.x, c.y, 10), iso(c.x + U, c.y, 10), iso(c.x + U, c.y + U, 10), iso(c.x, c.y + U, 10)]), fill: "none", stroke: shade(t.cor, .9), "stroke-opacity": ".55", "stroke-width": "1.2" }, g);
+    // Paredes de fundo
+    box(c.x, c.y, U, 4, 26, 10, shade(t.cor, .5), shade(t.cor, .32), shade(t.cor, .28), g);
+    box(c.x, c.y, 4, U, 26, 10, shade(t.cor, .5), shade(t.cor, .32), shade(t.cor, .28), g);
+    // Mesas e agentes
+    const n = t.agentes;
+    const spots = [[0.5, 0.55], [0.3, 0.38], [0.7, 0.7], [0.3, 0.72], [0.7, 0.36]];
+    const order = n === 1 ? [0] : n === 2 ? [1, 2] : [1, 0, 2];
+    order.forEach((si, i) => {
+      const [fx, fy] = spots[si];
+      const dx = c.x + U * fx - 14, dy = c.y + U * fy - 9;
+      box(dx, dy, 28, 18, 12, 10, "#C9A36B", "#8C6B3F", "#7A5C35", g);
+      box(dx + 6, dy + 2, 16, 3, 13, 22, "#1C2540", "#141B30", "#141B30", g);
+      el("polygon", { class: "screen", points: pts([iso(dx + 7, dy + 5, 24), iso(dx + 21, dy + 5, 24), iso(dx + 21, dy + 5, 33), iso(dx + 7, dy + 5, 33)]), fill: t.cor, "fill-opacity": ".9", style: `animation-delay:${(i * .7).toFixed(1)}s` }, g);
+      const p = iso(dx + 14, dy + 28, 10);
+      box(dx + 9, dy + 22, 10, 8, 14, 10, shade(t.cor, .85), shade(t.cor, .6), shade(t.cor, .5), g);
+      el("circle", { class: "head", cx: p[0], cy: p[1] - 22, r: 5.2, fill: "#F3D9B8", style: `animation-delay:${(i * .5 + t.gx * .3).toFixed(1)}s` }, g);
+    });
+    labels.push({ t, g });
+  });
+  // Etiquetas por cima de tudo
+  labels.forEach(({ t, g }) => drawLabel(t, g));
+}
+
+function drawBrain() {
+  const c = cell(BRAIN.gx, BRAIN.gy);
+  const g = el("g", { "aria-label": "Cérebro" });
+  const r = 30, cx = c.x + U / 2, cy = c.y + U / 2;
+  const ring = [];
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; ring.push(iso(cx + Math.cos(a) * U * .42, cy + Math.sin(a) * U * .42, 4)); }
+  el("polygon", { points: pts(ring), fill: "#151E38", stroke: "#E8C547", "stroke-opacity": ".45" }, g);
+  const p = iso(cx, cy, 34);
+  el("ellipse", { cx: p[0], cy: p[1] + 18, rx: 90, ry: 52, fill: "url(#brainGlow)" }, g);
+  // Rede de notas
+  const nodes = [];
+  for (let i = 0; i < 26; i++) { const a = i * 2.39996, rr = 6 + Math.sqrt(i) * 7.2; nodes.push([p[0] + Math.cos(a) * rr * 1.35, p[1] + Math.sin(a) * rr * .8]); }
+  nodes.forEach((n, i) => { if (i) el("line", { x1: p[0], y1: p[1], x2: n[0], y2: n[1], stroke: "#E8C547", "stroke-opacity": ".28", "stroke-width": ".8" }, g); });
+  nodes.forEach((n, i) => el("circle", { cx: n[0], cy: n[1], r: i ? 2.2 : 0, fill: "#F5E7B0" }, g));
+  el("circle", { class: "brain-core", cx: p[0], cy: p[1], r: 7, fill: "#E8C547" }, g);
+  const lw = 138, lx = p[0] - lw / 2, ly = p[1] + 40;
+  el("rect", { x: lx, y: ly, width: lw, height: 40, rx: 8, fill: "rgba(11,16,32,.9)", stroke: "#E8C547", "stroke-opacity": ".7" }, g);
+  const t1 = el("text", { x: p[0], y: ly + 17, "text-anchor": "middle", class: "lbl-name" }, g); t1.textContent = "O Cérebro";
+  const t2 = el("text", { x: p[0], y: ly + 32, "text-anchor": "middle", class: "lbl-meta" }, g); t2.textContent = "97 NOTAS · OBSIDIAN";
+}
+
+function drawLabel(t, g) {
+  const c = cell(t.gx, t.gy);
+  const p = iso(c.x + U * .15, c.y + U * .15, 46);
+  const w = 150, h = 58, x = p[0] - w / 2, y = p[1] - h - 6;
+  const lg = el("g", {}, g);
+  el("rect", { class: "lbl-bg", x, y, width: w, height: h, rx: 8 }, lg);
+  el("circle", { cx: x + 14, cy: y + 16, r: 4, fill: t.cor }, lg);
+  const n = el("text", { x: x + 24, y: y + 20, class: "lbl-name" }, lg); n.textContent = t.nome;
+  const num = el("text", { x: x + 12, y: y + 47, class: "lbl-num" }, lg); num.textContent = t.agentes;
+  const m = el("text", { x: x + 30, y: y + 46, class: "lbl-meta", "data-meta": t.id }, lg);
+  m.textContent = metaFor(t.id);
+}
+
+/* ---------- Estado ---------- */
+let tasks = [];
+let selTeam = null;
+let filter = "ativas";
+let db = null;
+
+function counts(team) {
+  const r = { fila: 0, fazendo: 0, feito: 0 };
+  tasks.forEach(t => { if ((!team || t.equipe === team) && r[t.status] !== undefined) r[t.status]++; });
+  return r;
+}
+function metaFor(id) { const c = counts(id); return `AGENTES · ${c.fila} FILA · ${c.fazendo} FAZ`; }
+
+function renderCounts() {
+  const c = counts(selTeam);
+  for (const k of ["fila", "fazendo", "feito"]) document.getElementById("c-" + k).textContent = c[k];
+  svg.querySelectorAll("[data-meta]").forEach(n => n.textContent = metaFor(n.getAttribute("data-meta")));
+}
+
+function renderPanel() {
+  const title = document.getElementById("p-title"), card = document.getElementById("p-card"), clear = document.getElementById("p-clear");
+  svg.querySelectorAll(".room").forEach(r => r.classList.toggle("sel", r.dataset.id === selTeam));
+  if (!selTeam) {
+    title.textContent = "Todas as equipes"; clear.hidden = true;
+    card.innerHTML = "";
+    const p = document.createElement("p");
+    p.textContent = "Peça uma tarefa e a Diretoria escolhe a equipe certa. Cada sala é um agente que lê o mesmo cérebro.";
+    card.appendChild(p);
+  } else {
+    const t = byId[selTeam];
+    title.textContent = "Equipe " + t.nome; clear.hidden = false;
+    card.innerHTML = "";
+    const p = document.createElement("p"); p.textContent = t.desc; card.appendChild(p);
+    const tl = document.createElement("div"); tl.className = "tools";
+    t.tools.forEach(n => { const s = document.createElement("span"); s.className = "tool"; s.textContent = n; tl.appendChild(s); });
+    card.appendChild(tl);
+    const a = document.createElement("p"); a.style.fontFamily = "var(--f-mono)"; a.style.fontSize = "11.5px";
+    a.textContent = `.claude/agents/${t.id}.md`; card.appendChild(a);
+  }
+  renderTasks(); renderCounts();
+}
+
+function renderTasks() {
+  const ul = document.getElementById("tasks");
+  const empty = document.getElementById("empty");
+  ul.querySelectorAll("li.task").forEach(n => n.remove());
+  const order = { fazendo: 0, fila: 1, feito: 2 };
+  const list = tasks
+    .filter(t => !selTeam || t.equipe === selTeam)
+    .filter(t => filter === "ativas" ? t.status !== "feito" : t.status === filter)
+    .sort((a, b) => (order[a.status] - order[b.status]) || ((b.criado || 0) - (a.criado || 0)));
+  empty.hidden = list.length > 0;
+  if (!list.length) {
+    empty.innerHTML = "";
+    empty.append(tasks.length ? "Nada aqui com esse filtro." : "A fila aparece aqui. Escreva a ");
+    if (!tasks.length) { const s = document.createElement("strong"); s.textContent = "primeira tarefa"; empty.append(s, " acima."); }
+  }
+  list.forEach(t => {
+    const li = document.createElement("li"); li.className = "task"; li.dataset.s = t.status;
+    const bar = document.createElement("span"); bar.className = "bar";
+    const body = document.createElement("div"); body.className = "t-body";
+    const ti = document.createElement("span"); ti.className = "t-title"; ti.textContent = t.titulo;
+    const meta = document.createElement("span"); meta.className = "t-meta";
+    const tm = document.createElement("span"); tm.className = "tm"; tm.textContent = byId[t.equipe]?.nome || t.equipe;
+    tm.style.color = byId[t.equipe]?.cor || "";
+    meta.appendChild(tm);
+    if (t.cliente) { const c = document.createElement("span"); c.textContent = t.cliente; meta.appendChild(c); }
+    if (t.motivo) { const m = document.createElement("span"); m.textContent = t.motivo; meta.appendChild(m); }
+    body.append(ti, meta);
+    const act = document.createElement("div"); act.className = "t-actions";
+    const b = document.createElement("button"); b.type = "button"; b.textContent = NEXT_LBL[t.status] || "começar";
+    b.addEventListener("click", () => setStatus(t, NEXT[t.status] || "fazendo"));
+    act.appendChild(b);
+    if (db) {
+      const sel = document.createElement("select"); sel.setAttribute("aria-label", "Mover para equipe");
+      sel.style.cssText = "font:500 11px var(--f-mono);padding:2px 4px;border-radius:6px;max-width:110px";
+      TEAMS.forEach(tt => { const o = document.createElement("option"); o.value = tt.id; o.textContent = tt.nome; if (tt.id === t.equipe) o.selected = true; sel.appendChild(o); });
+      sel.addEventListener("change", () => moveTask(t, sel.value));
+      act.appendChild(sel);
+    }
+    li.append(bar, body, act); ul.appendChild(li);
+  });
+}
+
+/* ---------- Ações ---------- */
+async function setStatus(t, s) {
+  if (!db) { t.status = s; renderPanel(); return; }
+  try { await db.collection("tarefas").doc(t.id).update({ status: s, atualizado: Date.now() }); }
+  catch (e) { msg("Não deu para salvar: " + (e?.message || e?.code || "erro")); }
+}
+async function moveTask(t, equipe) {
+  if (!db) return;
+  try { await db.collection("tarefas").doc(t.id).update({ equipe, motivo: "movida à mão", atualizado: Date.now() }); }
+  catch (e) { msg("Não deu para mover: " + (e?.message || e?.code || "erro")); }
+}
+function msg(s) { document.getElementById("f-msg").textContent = s; }
+
+const KEYWORDS = [
+  ["trafego", /(an[uú]ncio|ads|meta|campanha|tr[aá]fego|cpc|cpm|relat[oó]rio|p[uú]blico|lead)/i],
+  ["conteudo", /(post|conte[uú]do|lote|pauta|roteiro|legenda|carrossel|reels|story|calend[aá]rio)/i],
+  ["comercial", /(proposta|or[cç]amento|pre[cç]o|fechar|contrato)/i],
+  ["sites", /(site|landing|\blp\b|p[aá]gina)/i],
+  ["expansao", /(invent[aá]rio|franquia|expans[aã]o|investimento|loja nova|imobilizado)/i],
+  ["atendimento", /(cliente|reuni[aã]o|onboarding|perfil|cobran|briefing|feedback)/i],
+];
+function guessTeam(text) { for (const [id, re] of KEYWORDS) if (re.test(text)) return { equipe: id, motivo: "por palavra-chave" }; return { equipe: "diretoria", motivo: "triagem da Diretoria" }; }
+
+let sample = null;
+async function routeTeam(text, cliente) {
+  if (sample) {
+    try {
+      const r = await sample.json(
+        `Você é a Diretoria da agência Be One Marketing Digital. Escolha UMA equipe para executar a tarefa.\n` +
+        `Equipes:\n${TEAMS.map(t => `- ${t.id}: ${t.desc}`).join("\n")}\n\n` +
+        `Tarefa: ${text}\nCliente: ${cliente || "não informado"}\n\n` +
+        `Responda só JSON: {"equipe": "<id>", "motivo": "<até 6 palavras>"}`,
+        { modelTier: "quick" });
+      if (r && byId[r.equipe]) return { equipe: r.equipe, motivo: String(r.motivo || "escolhida pelo Claude").slice(0, 60) };
+    } catch (e) { if (e?.code === "not_granted") sample = null; }
+  }
+  return guessTeam(text);
+}
+
+document.getElementById("add").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const tEl = document.getElementById("f-titulo"), eq = document.getElementById("f-equipe"), cl = document.getElementById("f-cliente"), btn = document.getElementById("f-btn");
+  const titulo = tEl.value.trim(); if (!titulo) return;
+  btn.disabled = true; msg(eq.value === "auto" ? "Escolhendo a equipe…" : "Salvando…");
+  const cliente = cl.value.trim();
+  const r = eq.value === "auto" ? await routeTeam(titulo, cliente) : { equipe: eq.value, motivo: "escolhida à mão" };
+  const doc = { titulo, cliente, equipe: r.equipe, motivo: r.motivo, status: "fila", criado: Date.now() };
+  try {
+    if (db) await db.collection("tarefas").add(doc);
+    else { tasks.push({ id: "local-" + Date.now(), ...doc }); renderPanel(); }
+    tEl.value = ""; cl.value = "";
+    msg(`Na fila da equipe ${byId[r.equipe].nome}${db ? "" : " (só nesta tela: sem conexão com a fila compartilhada)"}.`);
+  } catch (e) { msg("Não deu para salvar: " + (e?.message || e?.code || "erro")); }
+  btn.disabled = false;
+});
+
+document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => {
+  filter = b.dataset.f;
+  document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderTasks();
+}));
+document.getElementById("p-clear").addEventListener("click", () => { selTeam = null; renderPanel(); });
+
+function bindRooms() {
+  svg.querySelectorAll(".room").forEach(r => {
+    const pick = () => { selTeam = selTeam === r.dataset.id ? null : r.dataset.id; renderPanel(); };
+    r.addEventListener("click", pick);
+    r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+  });
+}
+
+const sel = document.getElementById("f-equipe");
+TEAMS.forEach(t => { const o = document.createElement("option"); o.value = t.id; o.textContent = t.nome; sel.appendChild(o); });
+
+drawOffice(); bindRooms(); renderPanel();
+
+/* ---------- Conexão ---------- */
+(async () => {
+  const conn = document.getElementById("conn"), ct = document.getElementById("conn-t");
+  const use = window.claude?.use;
+  if (!use) { ct.textContent = "Fila local"; return; }
+  use("sample").then(s => { if (s) sample = s; }).catch(() => {});
+  try { db = await use("db"); } catch { db = null; }
+  if (!db) { ct.textContent = "Fila local"; renderTasks(); return; }
+  conn.classList.replace("off", "live"); ct.textContent = "Fila compartilhada";
+  db.collection("tarefas").onSnapshot(snap => {
+    tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderPanel();
+  }, e => { conn.classList.replace("live", "off"); ct.textContent = "Fila offline"; msg("A fila compartilhada caiu: " + (e?.message || e?.code)); });
+})();
+</script>
