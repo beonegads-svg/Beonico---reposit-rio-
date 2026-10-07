@@ -19,3 +19,7 @@ O escritório (https://claude.ai/artifact/XnoksXQfH3VFFpr9EoGw4m) mostra só tar
 4. Nunca crie tarefa de exemplo nem marque como feito o que não foi entregue.
 
 Se `ArtifactData` não estiver disponível na sessão, diga isso ao Lucas e registre a tarefa no Notion.
+
+## Memória compartilhada com o Claude do chat
+
+O Claude do claude.ai não lê este repositório. O que ele precisa saber fica na página do Notion **"Contexto do Claude — Be One"** (https://app.notion.com/p/3f29fe6df06d81e8969fd3c81368e594). Sempre que houver decisão, modelo aprovado, cliente novo ou regra de trabalho, acrescente lá também (decisão nova no topo da tabela).
